@@ -19,10 +19,6 @@
 #' @return Der Eingabe-Dataframe, erweitert um eine neue numerische Spalte `raum` 
 #' (von 1 bis `K_rooms`), die anzeigt, in welchen finalen Klassenraum das Kind kommt.
 run_ilp_matching <- function(df, K_rooms = 10) {
-  
-  utils::globalVariables(c("gruppe", "geschlecht", "dg", "ds", "abgebende_schule", 
-                           "is_einzelmeldung", "n_total", "n_w", "n_m", "count", "raum"))
-  
   # Profil pro Gruppe (N=20)
   group_profiles <- df %>%
     group_by(gruppe) %>%

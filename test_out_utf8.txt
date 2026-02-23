@@ -1,0 +1,180 @@
+﻿[32mÔ£ö[39m | [38;2;255;165;0mF[39m [35mW[39m [34m S[39m [32m OK[39m | Context
+
+ÔáÅ |          0 | calculate_must_links                                           
+Ôáï |          1 | calculate_must_links                                           
+Ôá© |          4 | calculate_must_links                                           
+[32mÔ£ö[39m |          4 | calculate_must_links
+
+ÔáÅ |          0 | evaluation                                                     
+Ôá╣ |          3 | evaluation                                                     
+Ôá© |          4 | evaluation                                                     
+[32mÔ£ö[39m |          6 | evaluation[90m [1.6s][39m
+
+ÔáÅ |          0 | read_and_clean_data                                            
+Ôáï |          1 | read_and_clean_data                                            
+Ôá╣ | 1        2 | read_and_clean_data                                            
+[31mÔ£û[39m | [38;2;255;165;0m1[39m        4 | read_and_clean_data
+ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+[1m[38;2;255;165;0mFailure[39m ([34mtest-read_and_clean_data.R:10:3[39m): read_and_clean_data parses excel file correctly[22m
+Expected `all(...)` to be TRUE.
+Differences:
+`actual`:   [32mFALSE[39m
+`expected`: [32mTRUE[39m 
+
+ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+
+ÔáÅ |          0 | run_anticlustering                                             
+[31mÔ£û[39m | [38;2;255;165;0m1[39m        0 | run_anticlustering
+ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+[1m[38;2;255;165;0mError[39m ([34mtest-run_anticlustering.R:10:3[39m): run_anticlustering clusters into K groups[22m
+Error in `filter(., is.na(must_link_id))`: i In argument: `is.na(must_link_id)`.
+Caused by error:
+! object 'must_link_id' not found
+[1mBacktrace:[22m
+[90m     [39mÔûå
+[90m  1. [39mÔö£ÔöÇ[1mKlassenzusammensetzung[22m::run_anticlustering(...)[90m at test-run_anticlustering.R:10:3[39m
+[90m  2. [39mÔöé ÔööÔöÇdf %>% filter(is.na(must_link_id)) %>% ...[90m at Klassenzusammensetzung_2/R/run_anticlustering.R:58:3[39m
+[90m  3. [39mÔö£ÔöÇ[1mdplyr[22m::count(., abgebende_schule)
+[90m  4. [39mÔö£ÔöÇdplyr::filter(., is.na(must_link_id))
+[90m  5. [39mÔö£ÔöÇ[1m[94mdplyr:::filter.data.frame([39m[22m., is.na(must_link_id)[1m[94m)[39m[22m
+[90m  6. [39mÔöé ÔööÔöÇdplyr:::filter_impl(...)
+[90m  7. [39mÔöé   ÔööÔöÇdplyr:::filter_rows(...)
+[90m  8. [39mÔöé     ÔööÔöÇdplyr:::filter_eval(...)
+[90m  9. [39mÔöé       Ôö£ÔöÇ[1mbase[22m::withCallingHandlers(...)
+[90m 10. [39mÔöé       ÔööÔöÇmask$eval_all_filter(dots_expanded, invert, env_filter)
+[90m 11. [39mÔöé         ÔööÔöÇ[1mdplyr[22m (local) eval()
+[90m 12. [39mÔööÔöÇ[1mbase[22m::.handleSimpleError(...)
+[90m 13. [39m  ÔööÔöÇ[1mdplyr[22m (local) h(simpleError(msg, call))
+[90m 14. [39m    ÔööÔöÇ[1mrlang[22m::abort(message, class = error_class, parent = parent, call = error_call)
+ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+
+ÔáÅ |          0 | run_ilp_matching                                               
+[31mÔ£û[39m | [38;2;255;165;0m1[39m        0 | run_ilp_matching
+ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+[1m[38;2;255;165;0mError[39m ([34mtest-run_ilp_matching.R:8:3[39m): run_ilp_matching pairs groups into expected room numbers[22m
+Error in `summarise(., n_total = n(), n_w = sum(geschlecht == "w", na.rm = TRUE), n_m = sum(geschlecht == "m", na.rm = TRUE), dg_mean = mean(dg, na.rm = TRUE), ds_mean = mean(ds, na.rm = TRUE), schools = list(unique(abgebende_schule)), n_einzel = sum(is_einzelmeldung))`: i In argument: `n_einzel = sum(is_einzelmeldung)`.
+i In group 1: `gruppe = 1`.
+Caused by error:
+! object 'is_einzelmeldung' not found
+[1mBacktrace:[22m
+[90m     [39mÔûå
+[90m  1. [39mÔö£ÔöÇ[1mKlassenzusammensetzung[22m::run_ilp_matching(df, K_rooms = 10)[90m at test-run_ilp_matching.R:8:3[39m
+[90m  2. [39mÔöé ÔööÔöÇ... %>% ungroup()[90m at Klassenzusammensetzung_2/R/run_ilp_matching.R:23:3[39m
+[90m  3. [39mÔö£ÔöÇ[1mdplyr[22m::ungroup(.)
+[90m  4. [39mÔö£ÔöÇdplyr::summarise(...)
+[90m  5. [39mÔö£ÔöÇ[1m[94mdplyr:::summarise.grouped_df([39m[22m...[1m[94m)[39m[22m
+[90m  6. [39mÔöé ÔööÔöÇdplyr:::summarise_cols(.data, dplyr_quosures(...), by, "summarise")
+[90m  7. [39mÔöé   Ôö£ÔöÇ[1mbase[22m::withCallingHandlers(...)
+[90m  8. [39mÔöé   ÔööÔöÇ[1mdplyr[22m:::map(quosures, summarise_eval_one, mask = mask)
+[90m  9. [39mÔöé     ÔööÔöÇ[1mbase[22m::lapply(.x, .f, ...)
+[90m 10. [39mÔöé       ÔööÔöÇ[1mdplyr[22m (local) FUN(X[[i]], ...)
+[90m 11. [39mÔöé         ÔööÔöÇmask$eval_all_summarise(quo)
+[90m 12. [39mÔöé           ÔööÔöÇ[1mdplyr[22m (local) eval()
+[90m 13. [39mÔööÔöÇ[1mbase[22m::.handleSimpleError(...)
+[90m 14. [39m  ÔööÔöÇ[1mdplyr[22m (local) h(simpleError(msg, call))
+[90m 15. [39m    ÔööÔöÇdplyr (local) handler(cnd)
+[90m 16. [39m      ÔööÔöÇ[1mrlang[22m::abort(message, class = error_class, parent = parent, call = error_call)
+ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+
+ÔáÅ |          0 | run_micro_swaps                                                
+Ôáï | 1        0 | run_micro_swaps                                                
+[31mÔ£û[39m | [38;2;255;165;0m1[39m        0 | run_micro_swaps
+ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+[1m[38;2;255;165;0mError[39m ([34mtest-run_micro_swaps.R:19:3[39m): run_micro_swaps removes isolates without changing gender ratios[22m
+Error in `filter(., n > 1 & n_in_raum == 1)`: i In argument: `n > 1 & n_in_raum == 1`.
+Caused by error in `n > 1`:
+! comparison (>) is possible only for atomic and list types
+[1mBacktrace:[22m
+[90m     [39mÔûå
+[90m  1. [39mÔö£ÔöÇ[1mKlassenzusammensetzung[22m::run_micro_swaps(df)[90m at test-run_micro_swaps.R:19:3[39m
+[90m  2. [39mÔöé ÔööÔöÇdf %>% filter(n > 1 & n_in_raum == 1)[90m at Klassenzusammensetzung_2/R/run_micro_swaps.R:30:3[39m
+[90m  3. [39mÔö£ÔöÇ[1mdplyr[22m::filter(., n > 1 & n_in_raum == 1)
+[90m  4. [39mÔö£ÔöÇ[1m[94mdplyr:::filter.data.frame([39m[22m., n > 1 & n_in_raum == 1[1m[94m)[39m[22m
+[90m  5. [39mÔöé ÔööÔöÇdplyr:::filter_impl(...)
+[90m  6. [39mÔöé   ÔööÔöÇdplyr:::filter_rows(...)
+[90m  7. [39mÔöé     ÔööÔöÇdplyr:::filter_eval(...)
+[90m  8. [39mÔöé       Ôö£ÔöÇ[1mbase[22m::withCallingHandlers(...)
+[90m  9. [39mÔöé       ÔööÔöÇmask$eval_all_filter(dots_expanded, invert, env_filter)
+[90m 10. [39mÔöé         ÔööÔöÇ[1mdplyr[22m (local) eval()
+[90m 11. [39mÔööÔöÇ[1mbase[22m::.handleSimpleError(...)
+[90m 12. [39m  ÔööÔöÇ[1mdplyr[22m (local) h(simpleError(msg, call))
+[90m 13. [39m    ÔööÔöÇ[1mrlang[22m::abort(message, class = error_class, parent = parent, call = error_call)
+ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+
+ÔòÉÔòÉ [1mResults[22m ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+[36mDuration: 3.5 s[39m
+
+ÔöÇÔöÇ Failed tests ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+[1m[38;2;255;165;0mFailure[39m ([34mtest-read_and_clean_data.R:10:3[39m): read_and_clean_data parses excel file correctly[22m
+Expected `all(...)` to be TRUE.
+Differences:
+`actual`:   [32mFALSE[39m
+`expected`: [32mTRUE[39m 
+
+
+[1m[38;2;255;165;0mError[39m ([34mtest-run_anticlustering.R:10:3[39m): run_anticlustering clusters into K groups[22m
+Error in `filter(., is.na(must_link_id))`: i In argument: `is.na(must_link_id)`.
+Caused by error:
+! object 'must_link_id' not found
+[1mBacktrace:[22m
+[90m     [39mÔûå
+[90m  1. [39mÔö£ÔöÇ[1mKlassenzusammensetzung[22m::run_anticlustering(...)[90m at test-run_anticlustering.R:10:3[39m
+[90m  2. [39mÔöé ÔööÔöÇdf %>% filter(is.na(must_link_id)) %>% ...[90m at Klassenzusammensetzung_2/R/run_anticlustering.R:58:3[39m
+[90m  3. [39mÔö£ÔöÇ[1mdplyr[22m::count(., abgebende_schule)
+[90m  4. [39mÔö£ÔöÇdplyr::filter(., is.na(must_link_id))
+[90m  5. [39mÔö£ÔöÇ[1m[94mdplyr:::filter.data.frame([39m[22m., is.na(must_link_id)[1m[94m)[39m[22m
+[90m  6. [39mÔöé ÔööÔöÇdplyr:::filter_impl(...)
+[90m  7. [39mÔöé   ÔööÔöÇdplyr:::filter_rows(...)
+[90m  8. [39mÔöé     ÔööÔöÇdplyr:::filter_eval(...)
+[90m  9. [39mÔöé       Ôö£ÔöÇ[1mbase[22m::withCallingHandlers(...)
+[90m 10. [39mÔöé       ÔööÔöÇmask$eval_all_filter(dots_expanded, invert, env_filter)
+[90m 11. [39mÔöé         ÔööÔöÇ[1mdplyr[22m (local) eval()
+[90m 12. [39mÔööÔöÇ[1mbase[22m::.handleSimpleError(...)
+[90m 13. [39m  ÔööÔöÇ[1mdplyr[22m (local) h(simpleError(msg, call))
+[90m 14. [39m    ÔööÔöÇ[1mrlang[22m::abort(message, class = error_class, parent = parent, call = error_call)
+
+[1m[38;2;255;165;0mError[39m ([34mtest-run_ilp_matching.R:8:3[39m): run_ilp_matching pairs groups into expected room numbers[22m
+Error in `summarise(., n_total = n(), n_w = sum(geschlecht == "w", na.rm = TRUE), n_m = sum(geschlecht == "m", na.rm = TRUE), dg_mean = mean(dg, na.rm = TRUE), ds_mean = mean(ds, na.rm = TRUE), schools = list(unique(abgebende_schule)), n_einzel = sum(is_einzelmeldung))`: i In argument: `n_einzel = sum(is_einzelmeldung)`.
+i In group 1: `gruppe = 1`.
+Caused by error:
+! object 'is_einzelmeldung' not found
+[1mBacktrace:[22m
+[90m     [39mÔûå
+[90m  1. [39mÔö£ÔöÇ[1mKlassenzusammensetzung[22m::run_ilp_matching(df, K_rooms = 10)[90m at test-run_ilp_matching.R:8:3[39m
+[90m  2. [39mÔöé ÔööÔöÇ... %>% ungroup()[90m at Klassenzusammensetzung_2/R/run_ilp_matching.R:23:3[39m
+[90m  3. [39mÔö£ÔöÇ[1mdplyr[22m::ungroup(.)
+[90m  4. [39mÔö£ÔöÇdplyr::summarise(...)
+[90m  5. [39mÔö£ÔöÇ[1m[94mdplyr:::summarise.grouped_df([39m[22m...[1m[94m)[39m[22m
+[90m  6. [39mÔöé ÔööÔöÇdplyr:::summarise_cols(.data, dplyr_quosures(...), by, "summarise")
+[90m  7. [39mÔöé   Ôö£ÔöÇ[1mbase[22m::withCallingHandlers(...)
+[90m  8. [39mÔöé   ÔööÔöÇ[1mdplyr[22m:::map(quosures, summarise_eval_one, mask = mask)
+[90m  9. [39mÔöé     ÔööÔöÇ[1mbase[22m::lapply(.x, .f, ...)
+[90m 10. [39mÔöé       ÔööÔöÇ[1mdplyr[22m (local) FUN(X[[i]], ...)
+[90m 11. [39mÔöé         ÔööÔöÇmask$eval_all_summarise(quo)
+[90m 12. [39mÔöé           ÔööÔöÇ[1mdplyr[22m (local) eval()
+[90m 13. [39mÔööÔöÇ[1mbase[22m::.handleSimpleError(...)
+[90m 14. [39m  ÔööÔöÇ[1mdplyr[22m (local) h(simpleError(msg, call))
+[90m 15. [39m    ÔööÔöÇdplyr (local) handler(cnd)
+[90m 16. [39m      ÔööÔöÇ[1mrlang[22m::abort(message, class = error_class, parent = parent, call = error_call)
+
+[1m[38;2;255;165;0mError[39m ([34mtest-run_micro_swaps.R:19:3[39m): run_micro_swaps removes isolates without changing gender ratios[22m
+Error in `filter(., n > 1 & n_in_raum == 1)`: i In argument: `n > 1 & n_in_raum == 1`.
+Caused by error in `n > 1`:
+! comparison (>) is possible only for atomic and list types
+[1mBacktrace:[22m
+[90m     [39mÔûå
+[90m  1. [39mÔö£ÔöÇ[1mKlassenzusammensetzung[22m::run_micro_swaps(df)[90m at test-run_micro_swaps.R:19:3[39m
+[90m  2. [39mÔöé ÔööÔöÇdf %>% filter(n > 1 & n_in_raum == 1)[90m at Klassenzusammensetzung_2/R/run_micro_swaps.R:30:3[39m
+[90m  3. [39mÔö£ÔöÇ[1mdplyr[22m::filter(., n > 1 & n_in_raum == 1)
+[90m  4. [39mÔö£ÔöÇ[1m[94mdplyr:::filter.data.frame([39m[22m., n > 1 & n_in_raum == 1[1m[94m)[39m[22m
+[90m  5. [39mÔöé ÔööÔöÇdplyr:::filter_impl(...)
+[90m  6. [39mÔöé   ÔööÔöÇdplyr:::filter_rows(...)
+[90m  7. [39mÔöé     ÔööÔöÇdplyr:::filter_eval(...)
+[90m  8. [39mÔöé       Ôö£ÔöÇ[1mbase[22m::withCallingHandlers(...)
+[90m  9. [39mÔöé       ÔööÔöÇmask$eval_all_filter(dots_expanded, invert, env_filter)
+[90m 10. [39mÔöé         ÔööÔöÇ[1mdplyr[22m (local) eval()
+[90m 11. [39mÔööÔöÇ[1mbase[22m::.handleSimpleError(...)
+[90m 12. [39m  ÔööÔöÇ[1mdplyr[22m (local) h(simpleError(msg, call))
+[90m 13. [39m    ÔööÔöÇ[1mrlang[22m::abort(message, class = error_class, parent = parent, call = error_call)
+
+[ [38;2;255;165;0mFAIL[39m 4 | WARN 0 | SKIP 0 | PASS 14 ]

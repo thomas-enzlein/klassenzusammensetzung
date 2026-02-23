@@ -32,10 +32,6 @@ calculate_must_links <- function(df, threshold = 3.5, small_school_max_n = 3,
                                  selected_features = c("dg", "ds", "geschlecht"),
                                  feature_weights = c(dg = 1, ds = 1, geschlecht = 2)) {
   
-  # Linter-Fehler unterdrücken
-  utils::globalVariables(c("abgebende_schule", "n", "m", "leverage", "hebel_leistung", 
-                           "hebel_sozial", "p", "max_leverage"))
-                           
   
   school_counts <- df %>% count(abgebende_schule)
   df <- df %>% left_join(school_counts, by = "abgebende_schule", suffix = c("", "_total"))

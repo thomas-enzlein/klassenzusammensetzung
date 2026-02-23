@@ -1,4 +1,5 @@
 # Klassenzusammensetzung
+[![R-CMD-check](https://github.com/thomas-enzlein/klassenzusammensetzung/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/thomas-enzlein/klassenzusammensetzung/actions/workflows/R-CMD-check.yaml)
 
 [![R-CMD-check](https://github.com/USER/Klassenzusammensetzung/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/USER/Klassenzusammensetzung/actions/workflows/R-CMD-check.yaml)
 

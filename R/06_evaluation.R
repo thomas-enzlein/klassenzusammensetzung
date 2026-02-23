@@ -17,14 +17,6 @@
 #' @return Ein Dataframe (`tibble`), bei dem jede Zeile einem zugeteilten Raum 
 #' entspricht, inklusive berechneter Metriken zur Evaluation der Gleichverteilung.
 calculate_room_stats <- function(df) {
-  
-  utils::globalVariables(c("raum", "de", "dg", "ds", "geschlecht", "ue", "mig", 
-                           "abgebende_schule", "mig_numeric", "n_in_bars", 
-                           "is_isolated", "abgebende_schule_plot", "hover_text", 
-                           "is_komplett_vereint", "has_isolated", "has_klumpen", 
-                           "all_vereint", "any_isolated", "any_klumpen", 
-                           "legend_name", "n_in_raum", "vorname", "name"))
-  
   # Hilfsfunktion für Mittelwert ± SD
   fmt_stats <- function(x) {
     m <- mean(x, na.rm = TRUE)

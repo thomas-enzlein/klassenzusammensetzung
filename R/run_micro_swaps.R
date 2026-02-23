@@ -20,10 +20,6 @@
 #'   \item \code{swaps_count}: Die Anzahl der erfolgreich durchgeführten Tauschvorgänge.
 #' }
 run_micro_swaps <- function(df) {
-  
-  utils::globalVariables(c("raum", "abgebende_schule", "kid_id", "geschlecht", 
-                           "dg", "ds", "diff", "n_in_raum"))
-  
   df <- df %>% 
     group_by(raum, abgebende_schule) %>% 
     mutate(n_in_raum = n()) %>% 

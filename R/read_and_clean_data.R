@@ -27,9 +27,6 @@
 #'   \item{mig}{Migrationshintergrund ("ja" oder "nein").}
 #' }
 read_and_clean_data <- function(file_path) {
-  # Linter-Fehler unterdrücken
-  utils::globalVariables(c("geburtsdatum", "konfession", "geschlecht", "abgebende_schule", 
-                           "mig", "de", "dg", "ds", "ue"))
   # read_excel wählt automatisch xls oder xlsx.
   # suppressWarnings und guess_max verhindern die massenhaften Datumswarnungen.
   df <- suppressWarnings(read_excel(file_path, skip = 7, guess_max = 10000)) %>%

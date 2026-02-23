@@ -27,9 +27,6 @@
 run_anticlustering <- function(df, must_links, K_groups = 20, 
                                selected_features = c("dg", "ds", "geschlecht"),
                                feature_weights = c(dg = 1, ds = 1, geschlecht = 2)) {
-  
-  utils::globalVariables(c("abgebende_schule", "must_link_id", "n"))
-  
   # Baue Features dynamisch auf
   feature_list <- list()
   
