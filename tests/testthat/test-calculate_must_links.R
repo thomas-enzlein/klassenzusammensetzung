@@ -10,7 +10,7 @@ test_that("calculate_must_links returns correct structure", {
                               feature_weights = weights)
   
   expect_type(res, "list")
-  expect_true(all(c("df", "must_links_vector", "small_schools_leverage") %in% names(res)))
+  expect_true(all(c("df", "must_links_vector", "all_schools_leverage") %in% names(res)))
   
   # Da threshold sehr hoch ist, sollte Klein_1 einen ML erhalten
   expect_true(any(!is.na(res$must_links_vector)))

@@ -184,7 +184,7 @@ server <- function(input, output, session) {
       
       incProgress(0.9, detail = "Erstelle Auswertungen")
       rv$final_df <- df
-      rv$ml_table <- ml_res$small_schools_leverage
+      rv$ml_table <- calculate_school_stats(df, ml_res$all_schools_leverage, ml_res$must_link_schools)
       
       stats_list <- calculate_room_stats(df)
       rv$stats <- stats_list$room_stats
@@ -288,24 +288,49 @@ server <- function(input, output, session) {
   output$must_links_table <- renderDT({
     req(rv$ml_table)
     
-    formatted_ml <- rv$ml_table %>%
-      rename(
-        `Grundschule` = abgebende_schule,
-        `Kinder (n)` = n,
-        `Hebel Leistung & UE` = hebel_leistung,
-        `Hebel Sozial (Geschlecht/Mig)` = hebel_sozial,
-        `Gesamt-Hebel (Summe)` = max_leverage
-      ) %>%
-      select(
-        `Grundschule`, `Kinder (n)`,
-        `Hebel Leistung & UE`, `Hebel Sozial (Geschlecht/Mig)`,
-        `Gesamt-Hebel (Summe)`
-      )
-      
-    num_cols <- c("Hebel Leistung & UE", "Hebel Sozial (Geschlecht/Mig)", "Gesamt-Hebel (Summe)")
+    # We will use the same kind of deviations logic as the room table.
+    max_dev_de <- max(rv$ml_table$dev_de, 0.5, na.rm = TRUE)
+    max_dev_dg <- max(rv$ml_table$dev_dg, 0.5, na.rm = TRUE)
+    max_dev_ds <- max(rv$ml_table$dev_ds, 0.5, na.rm = TRUE)
+    max_dev_mig <- max(rv$ml_table$dev_mig, 0.1, na.rm = TRUE)
+    max_dev_gen <- max(rv$ml_table$dev_gender, 0.1, na.rm = TRUE)
+    
+    dt <- datatable(rv$ml_table, 
+                    options = list(
+                      pageLength = 10, 
+                      dom = 'ftip',
+                      scrollX = TRUE,
+                      columnDefs = list(
+                        list(visible = FALSE, targets = c("dev_de", "dev_dg", "dev_ds", "dev_mig", "dev_gender", "max_leverage", "mean_de", "mean_dg", "mean_ds", "mean_ue")),
+                        list(orderData = which(names(rv$ml_table) == "mean_de") - 1, targets = which(names(rv$ml_table) == "MW de (+/-SD)") - 1),
+                        list(orderData = which(names(rv$ml_table) == "mean_dg") - 1, targets = which(names(rv$ml_table) == "MW dg (+/-SD)") - 1),
+                        list(orderData = which(names(rv$ml_table) == "mean_ds") - 1, targets = which(names(rv$ml_table) == "MW ds (+/-SD)") - 1),
+                        list(orderData = which(names(rv$ml_table) == "mean_ue") - 1, targets = which(names(rv$ml_table) == "UE (Bar)") - 1),
+                        list(orderData = which(names(rv$ml_table) == "max_leverage") - 1, targets = which(names(rv$ml_table) == "Max Leverage") - 1)
+                      )
+                    ),
+                    escape = FALSE,
+                    rownames = FALSE) %>%
+      formatStyle('MW de (+/-SD)', 'dev_de',
+                  background = styleColorBar(c(0, max_dev_de), '#ffc107'),
+                  backgroundSize = '100% 70%', backgroundRepeat = 'no-repeat', backgroundPosition = 'center') %>%
+      formatStyle('MW dg (+/-SD)', 'dev_dg',
+                  background = styleColorBar(c(0, max_dev_dg), '#ffc107'),
+                  backgroundSize = '100% 70%', backgroundRepeat = 'no-repeat', backgroundPosition = 'center') %>%
+      formatStyle('MW ds (+/-SD)', 'dev_ds',
+                  background = styleColorBar(c(0, max_dev_ds), '#ffc107'),
+                  backgroundSize = '100% 70%', backgroundRepeat = 'no-repeat', backgroundPosition = 'center') %>%
+      formatStyle('Mig.-Quote', 'dev_mig',
+                  background = styleColorBar(c(0, max_dev_mig), '#17a2b8'),
+                  backgroundSize = '100% 70%', backgroundRepeat = 'no-repeat', backgroundPosition = 'center') %>%
+      formatStyle('Verhaeltnis (J:M)', 'dev_gender',
+                  background = styleColorBar(c(0, max_dev_gen), '#17a2b8'),
+                  backgroundSize = '100% 70%', backgroundRepeat = 'no-repeat', backgroundPosition = 'center') %>%
+      formatStyle('Must-Link (*)', 
+                  backgroundColor = styleEqual(c("X", ""), c("#28a745", "white")),
+                  color = styleEqual(c("X", ""), c("white", "black")))
                   
-    datatable(formatted_ml, options = list(pageLength = 10, scrollX = TRUE)) %>%
-      formatRound(columns = num_cols, digits = 1)
+    return(dt)
   })
   
   output$download_res <- downloadHandler(

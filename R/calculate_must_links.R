@@ -43,15 +43,14 @@ calculate_must_links <- function(df, threshold = 3.5, small_school_max_n = 3,
   # Hilfs-Dataframe für Hebel/Leverage-Berechnung
   # Wir brauchen für jede Variable den globalen Durchschnitt
   
-  small_schools_leverage <- df %>%
-    filter(n <= small_school_max_n) %>%
+  all_schools_leverage <- df %>%
     group_by(abgebende_schule) %>%
     summarise(n = n()) %>%
     ungroup()
     
   # Initialisiere Hebel-Spalten
-  small_schools_leverage$hebel_leistung <- 0
-  small_schools_leverage$hebel_sozial <- 0
+  all_schools_leverage$hebel_leistung <- 0
+  all_schools_leverage$hebel_sozial <- 0
   
   # Berechne Hebel pro Variable
   for (f in selected_features) {
@@ -69,12 +68,12 @@ calculate_must_links <- function(df, threshold = 3.5, small_school_max_n = 3,
       school_means <- school_means %>%
         mutate(leverage = abs((m - global_m) / global_sd) * weight)
         
-      small_schools_leverage <- small_schools_leverage %>%
+      all_schools_leverage <- all_schools_leverage %>%
         left_join(school_means %>% select(abgebende_schule, leverage), by = "abgebende_schule")
       
-      small_schools_leverage$hebel_leistung <- small_schools_leverage$hebel_leistung + 
-                                               ifelse(is.na(small_schools_leverage$leverage), 0, small_schools_leverage$leverage)
-      small_schools_leverage$leverage <- NULL
+      all_schools_leverage$hebel_leistung <- all_schools_leverage$hebel_leistung + 
+                                               ifelse(is.na(all_schools_leverage$leverage), 0, all_schools_leverage$leverage)
+      all_schools_leverage$leverage <- NULL
       
     } else if (f %in% c("geschlecht", "mig")) {
       # Sozialer Faktor: Abweichung im Anteil
@@ -89,20 +88,22 @@ calculate_must_links <- function(df, threshold = 3.5, small_school_max_n = 3,
       school_props <- school_props %>%
         mutate(leverage = abs(p - global_p) * weight)
         
-      small_schools_leverage <- small_schools_leverage %>%
+      all_schools_leverage <- all_schools_leverage %>%
         left_join(school_props %>% select(abgebende_schule, leverage), by = "abgebende_schule")
         
-      small_schools_leverage$hebel_sozial <- small_schools_leverage$hebel_sozial + 
-                                             ifelse(is.na(small_schools_leverage$leverage), 0, small_schools_leverage$leverage)
-      small_schools_leverage$leverage <- NULL
+      all_schools_leverage$hebel_sozial <- all_schools_leverage$hebel_sozial + 
+                                             ifelse(is.na(all_schools_leverage$leverage), 0, all_schools_leverage$leverage)
+      all_schools_leverage$leverage <- NULL
     }
   }
   
-  small_schools_leverage <- small_schools_leverage %>%
-    mutate(max_leverage = hebel_leistung + hebel_sozial) %>%
-    filter(max_leverage < threshold)
+  all_schools_leverage <- all_schools_leverage %>%
+    mutate(
+      max_leverage = hebel_leistung + hebel_sozial,
+      is_must_link = n <= small_school_max_n & max_leverage < threshold
+    )
     
-  must_link_schools <- small_schools_leverage$abgebende_schule
+  must_link_schools <- all_schools_leverage %>% filter(is_must_link) %>% pull(abgebende_schule)
   
   # Setze Must-Link IDs
   # Alle Schüler aus diesen kleinen "Low-Leverage" Schulen bekommen dieselbe ID, 
@@ -118,7 +119,7 @@ calculate_must_links <- function(df, threshold = 3.5, small_school_max_n = 3,
   
   return(list(
     df = df, 
-    small_schools_leverage = small_schools_leverage, 
+    all_schools_leverage = all_schools_leverage, 
     must_link_schools = must_link_schools,
     must_links_vector = must_links_vector
   ))
