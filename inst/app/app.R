@@ -312,41 +312,15 @@ server <- function(input, output, session) {
                         list(visible = FALSE, targets = c("dev_de", "dev_dg", "dev_ds", "dev_mig", "dev_gender", "mean_de", "mean_dg", "mean_ds", "mean_ue", "sd_ue")),
                         list(orderData = which(names(rv$stats) == "mean_de") - 1, targets = which(names(rv$stats) == "MW de (+/-SD)") - 1),
                         list(orderData = which(names(rv$stats) == "mean_dg") - 1, targets = which(names(rv$stats) == "MW dg (+/-SD)") - 1),
-                        list(orderData = which(names(rv$stats) == "mean_ds") - 1, targets = which(names(rv$stats) == "MW ds (+/-SD)") - 1),
-                        list(
-                          targets = which(names(rv$stats) == "UE (Bar)") - 1,
-                          render = JS(paste0(
-                            "function(data, type, row, meta) {",
-                            "  if (type !== 'display' || !row) return data;",
-                            "  var m = parseFloat(data);",
-                            "  if (isNaN(m)) return '-';",
-                            "  var s = 0;",
-                            "  if (Array.isArray(row)) { s = parseFloat(row[", which(names(rv$stats) == "sd_ue") - 1, "]); }",
-                            "  else if (typeof row === 'object') { s = parseFloat(row['sd_ue']); }",
-                            "  var s_safe = isNaN(s) ? 0 : s;",
-                            "  var m_clip = Math.min(Math.max(m, 1), 5);",
-                            "  var center_pct = (m_clip - 1) / 4 * 100;",
-                            "  var left_pct = Math.max(0, (m_clip - s_safe - 1) / 4 * 100);",
-                            "  var right_pct = Math.min(100, (m_clip + s_safe - 1) / 4 * 100);",
-                            "  var width_pct = right_pct - left_pct;",
-                            "  var sd_text = (!isNaN(s) && s > 0) ? ' &plusmn; ' + s.toFixed(2) : '';",
-                            "  var html = '<div style=\"display: flex; align-items: center; justify-content: flex-start; gap: 4px; line-height: 1; white-space: nowrap;\">' +",
-                            "    '<span style=\"font-size: 0.7rem; color: #6c757d;\">HS</span>' +",
-                            "    '<div style=\"width: 50px; position: relative; height: 10px; background-color: #e9ecef; border-radius: 2px; flex-shrink: 0;\">' +",
-                            "      '<div style=\"position: absolute; left: ' + left_pct + '%; width: ' + width_pct + '%; height: 100%; background-color: #adb5bd; border-radius: 1px;\"></div>' +",
-                            "      '<div style=\"position: absolute; left: ' + center_pct + '%; width: 2px; height: 100%; background-color: #212529; transform: translateX(-50%);\"></div>' +",
-                            "    '</div>' +",
-                            "    '<span style=\"font-size: 0.7rem; color: #6c757d;\">Gy</span>' +",
-                            "    '<span style=\"font-size: 0.8rem; color: #495057; margin-left: 6px;\">' + m.toFixed(2) + sd_text + '</span>' +",
-                            "  '</div>';",
-                            "  return html;",
-                            "}"
-                          ))
-                        )
+                        list(orderData = which(names(rv$stats) == "mean_ds") - 1, targets = which(names(rv$stats) == "MW ds (+/-SD)") - 1)
                       )
                     ),
                     escape = FALSE,
                     rownames = FALSE) %>%
+      formatRound('UE (Bar)', 2) %>%
+      formatStyle('UE (Bar)',
+                  background = styleColorBar(c(1, 5), '#ced4da'),
+                  backgroundSize = '98% 88%', backgroundRepeat = 'no-repeat', backgroundPosition = 'center') %>%
       formatStyle('MW de (+/-SD)', 'dev_de',
                   background = styleColorBar(c(0, max_dev_de), '#ffc107'),
                   backgroundSize = '100% 70%', backgroundRepeat = 'no-repeat', backgroundPosition = 'center') %>%
@@ -387,41 +361,15 @@ server <- function(input, output, session) {
                         list(orderData = which(names(rv$ml_table) == "mean_de") - 1, targets = which(names(rv$ml_table) == "MW de (+/-SD)") - 1),
                         list(orderData = which(names(rv$ml_table) == "mean_dg") - 1, targets = which(names(rv$ml_table) == "MW dg (+/-SD)") - 1),
                         list(orderData = which(names(rv$ml_table) == "mean_ds") - 1, targets = which(names(rv$ml_table) == "MW ds (+/-SD)") - 1),
-                        list(orderData = which(names(rv$ml_table) == "max_leverage") - 1, targets = which(names(rv$ml_table) == "Max Leverage") - 1),
-                        list(
-                          targets = which(names(rv$ml_table) == "UE (Bar)") - 1,
-                          render = JS(paste0(
-                            "function(data, type, row, meta) {",
-                            "  if (type !== 'display' || !row) return data;",
-                            "  var m = parseFloat(data);",
-                            "  if (isNaN(m)) return '-';",
-                            "  var s = 0;",
-                            "  if (Array.isArray(row)) { s = parseFloat(row[", which(names(rv$ml_table) == "sd_ue") - 1, "]); }",
-                            "    else if (typeof row === 'object') { s = parseFloat(row['sd_ue']); }",
-                            "  var s_safe = isNaN(s) ? 0 : s;",
-                            "  var m_clip = Math.min(Math.max(m, 1), 5);",
-                            "  var center_pct = (m_clip - 1) / 4 * 100;",
-                            "  var left_pct = Math.max(0, (m_clip - s_safe - 1) / 4 * 100);",
-                            "  var right_pct = Math.min(100, (m_clip + s_safe - 1) / 4 * 100);",
-                            "  var width_pct = right_pct - left_pct;",
-                            "  var sd_text = (!isNaN(s) && s > 0) ? ' &plusmn; ' + s.toFixed(2) : '';",
-                            "  var html = '<div style=\"display: flex; align-items: center; justify-content: flex-start; gap: 4px; line-height: 1; white-space: nowrap;\">' +",
-                            "    '<span style=\"font-size: 0.7rem; color: #6c757d;\">HS</span>' +",
-                            "    '<div style=\"width: 50px; position: relative; height: 10px; background-color: #e9ecef; border-radius: 2px; flex-shrink: 0;\">' +",
-                            "      '<div style=\"position: absolute; left: ' + left_pct + '%; width: ' + width_pct + '%; height: 100%; background-color: #adb5bd; border-radius: 1px;\"></div>' +",
-                            "      '<div style=\"position: absolute; left: ' + center_pct + '%; width: 2px; height: 100%; background-color: #212529; transform: translateX(-50%);\"></div>' +",
-                            "    '</div>' +",
-                            "    '<span style=\"font-size: 0.7rem; color: #6c757d;\">Gy</span>' +",
-                            "    '<span style=\"font-size: 0.8rem; color: #495057; margin-left: 6px;\">' + m.toFixed(2) + sd_text + '</span>' +",
-                            "  '</div>';",
-                            "  return html;",
-                            "}"
-                          ))
-                        )
+                        list(orderData = which(names(rv$ml_table) == "max_leverage") - 1, targets = which(names(rv$ml_table) == "Max Leverage") - 1)
                       )
                     ),
                     escape = FALSE,
                     rownames = FALSE) %>%
+      formatRound('UE (Bar)', 2) %>%
+      formatStyle('UE (Bar)',
+                  background = styleColorBar(c(1, 5), '#ced4da'),
+                  backgroundSize = '98% 88%', backgroundRepeat = 'no-repeat', backgroundPosition = 'center') %>%
       formatStyle('MW de (+/-SD)', 'dev_de',
                   background = styleColorBar(c(0, max_dev_de), '#ffc107'),
                   backgroundSize = '100% 70%', backgroundRepeat = 'no-repeat', backgroundPosition = 'center') %>%
