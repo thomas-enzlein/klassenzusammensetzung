@@ -296,6 +296,7 @@ server <- function(input, output, session) {
     max_dev_gen <- max(rv$ml_table$dev_gender, 0.1, na.rm = TRUE)
     
     dt <- datatable(rv$ml_table, 
+                    filter = 'top',
                     options = list(
                       pageLength = 10, 
                       dom = 'ftip',
