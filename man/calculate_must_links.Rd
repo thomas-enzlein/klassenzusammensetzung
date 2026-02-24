@@ -19,6 +19,12 @@ calculate_must_links(
 
 \item{small_school_max_n}{Die maximale Anzahl an Schülern, bei der eine Schule
 noch als "klein" gilt und potenziell zusammengehalten werden soll (Standard: 3).}
+
+\item{selected_features}{Ein Vektor von Strings. Die Spaltennamen der Variablen,
+die für das Clustering verwendet werden sollen (z.B. Deutschnoten, Geschlecht).}
+
+\item{feature_weights}{Ein benannter numerischer Vektor. Die Gewichtungen
+für die \code{selected_features} bei der Berechnung der Euklidischen Distanz.}
 }
 \value{
 Ein Dataframe auf Schulebene (abgebende_schule) mit folgenden Spalten:

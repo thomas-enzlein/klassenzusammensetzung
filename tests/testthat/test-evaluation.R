@@ -6,8 +6,8 @@ test_that("calculate_room_stats returns correct evaluation dataframe structure",
   
   expect_s3_class(stats_df, "data.frame")
   expect_true(nrow(stats_df) == 5)
-  expect_true(all(c("Raum", "Schülerzahl", "Ø de (±SD)", "Ø dg (±SD)", "Ø ds (±SD)", 
-                    "Anzahl Grundschulen", "Größte Grundschule", "Verhältnis (J:M)", 
+  expect_true(all(c("Raum", "Schuelerzahl", "Mittelwert de (+/-SD)", "Mittelwert dg (+/-SD)", "Mittelwert ds (+/-SD)", 
+                    "Anzahl Grundschulen", "Groesste Grundschule", "Verhaeltnis (J:M)", 
                     "Gy (n)", "Gy/RS (n)", "RS (n)", "RS/HS (n)", "HS (n)", "Mig.-Quote") %in% names(stats_df)))
 })
 

@@ -1,1 +1,5 @@
 ^\.github$
+^LICENSE\.md$
+^6_Aufnahmeentscheidung_EFG\.xls$
+^test_out\.txt$
+^test_out_utf8\.txt$

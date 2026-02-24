@@ -5,37 +5,37 @@
 #' @import ggplot2 plotly
 #' @export
 #' @name calculate_room_stats
-#' @title Berechnet die statistische Übersichtstabelle der Räume
+#' @title Berechnet die statistische uebersichtstabelle der Raeume
 #' 
 #' @description 
-#' Erzeugt eine aggregierte Übersichtstabelle für die Shiny-App, die 
+#' Erzeugt eine aggregierte uebersichtstabelle fuer die Shiny-App, die 
 #' wichtige Kennzahlen pro Raum (Mittelwerte, Standardabweichungen, 
-#' Geschlechterverhältnis, Schulübergänge, Migrationsquote) übersichtlich darstellt.
+#' Geschlechterverhaeltnis, Schuluebergaenge, Migrationsquote) uebersichtlich darstellt.
 #' 
-#' @param df Ein Dataframe mit den finalen Schülerdaten (inkl. Zuordnung in `raum`).
+#' @param df Ein Dataframe mit den finalen Schuelerdaten (inkl. Zuordnung in `raum`).
 #'
 #' @return Ein Dataframe (`tibble`), bei dem jede Zeile einem zugeteilten Raum 
 #' entspricht, inklusive berechneter Metriken zur Evaluation der Gleichverteilung.
 calculate_room_stats <- function(df) {
-  # Hilfsfunktion für Mittelwert ± SD
+  # Hilfsfunktion fuer Mittelwert +/- SD
   fmt_stats <- function(x) {
     m <- mean(x, na.rm = TRUE)
     s <- sd(x, na.rm = TRUE)
     if (is.na(s)) return(as.character(round(m, 2)))
-    return(paste0(round(m, 2), " ± ", round(s, 2)))
+    return(paste0(round(m, 2), " +/- ", round(s, 2)))
   }
   
   df_stats <- df %>%
     mutate(mig_numeric = as.numeric(mig == "ja")) %>%
     group_by(raum) %>%
     summarise(
-      `Schülerzahl` = n(),
-      `Ø de (±SD)` = fmt_stats(de),
-      `Ø dg (±SD)` = fmt_stats(dg),
-      `Ø ds (±SD)` = fmt_stats(ds),
+      `Schuelerzahl` = n(),
+      `Mittelwert de (+/-SD)` = fmt_stats(de),
+      `Mittelwert dg (+/-SD)` = fmt_stats(dg),
+      `Mittelwert ds (+/-SD)` = fmt_stats(ds),
       `Anzahl Grundschulen` = n_distinct(abgebende_schule),
-      `Größte Grundschule` = max(table(abgebende_schule)),
-      `Verhältnis (J:M)` = paste0(
+      `Groesste Grundschule` = max(table(abgebende_schule)),
+      `Verhaeltnis (J:M)` = paste0(
         round(sum(geschlecht == "m") / max(sum(geschlecht == "w"), 0.01), 1),
         " (", sum(geschlecht == "m"), "m:", sum(geschlecht == "w"), "w)"
       ),
@@ -58,13 +58,13 @@ calculate_room_stats <- function(df) {
 #' 
 #' @description 
 #' Erstellt ein interaktives Balkendiagramm, das die Verteilung der Kinder 
-#' aus den verschiedenen Grundschulen auf die Zielräume visualisiert. 
+#' aus den verschiedenen Grundschulen auf die Zielraeume visualisiert. 
 #' Isolierte Kinder werden spezifisch markiert (z.B. farblich hervorgehoben).
 #' Tooltips zeigen beim Hovern Noten und Geschlecht der einzelnen Kinder an.
 #' 
-#' @param df Ein Dataframe mit den finalen Schülerdaten (inkl. Zuordnung in `raum`).
+#' @param df Ein Dataframe mit den finalen Schuelerdaten (inkl. Zuordnung in `raum`).
 #' @param small_schools_leverage Ein Dataframe (Output von `calculate_must_links`), 
-#' der Informationen darüber enthält, welche Schulen Must-Links hatten.
+#' der Informationen darueber enthaelt, welche Schulen Must-Links hatten.
 #'
 #' @return Eine Liste mit drei Elementen:
 #' \itemize{
@@ -89,7 +89,7 @@ create_interactive_plot <- function(df, small_schools_leverage) {
       all_vereint = all(is_komplett_vereint),
       any_isolated = any(has_isolated),
       any_klumpen = any(has_klumpen),
-      n_total = first(n) # Gesamtgröße der Schule
+      n_total = first(n) # Gesamtgroesse der Schule
     ) %>%
     mutate(
       legend_name = as.character(abgebende_schule),
@@ -153,7 +153,7 @@ create_interactive_plot <- function(df, small_schools_leverage) {
     
   p_interactive <- ggplotly(p_raeume, tooltip = "text") %>%
     layout(
-      title = list(text = "Raum-Verteilung<br><sup>Hover über Balken für Noten/Geschlecht der Kinder</sup>"),
+      title = list(text = "Raum-Verteilung<br><sup>Hover ueber Balken fuer Noten/Geschlecht der Kinder</sup>"),
       margin = list(t = 100, b = 40, r = 150) # Extra Platz oben (title) und rechts (legend)
     )
     

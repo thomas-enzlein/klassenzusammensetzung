@@ -7,10 +7,10 @@
 create_interactive_plot(df, small_schools_leverage)
 }
 \arguments{
-\item{df}{Ein Dataframe mit den finalen Schülerdaten (inkl. Zuordnung in \code{raum}).}
+\item{df}{Ein Dataframe mit den finalen Schuelerdaten (inkl. Zuordnung in \code{raum}).}
 
 \item{small_schools_leverage}{Ein Dataframe (Output von \code{calculate_must_links}),
-der Informationen darüber enthält, welche Schulen Must-Links hatten.}
+der Informationen darueber enthaelt, welche Schulen Must-Links hatten.}
 }
 \value{
 Eine Liste mit drei Elementen:
@@ -22,7 +22,7 @@ Eine Liste mit drei Elementen:
 }
 \description{
 Erstellt ein interaktives Balkendiagramm, das die Verteilung der Kinder
-aus den verschiedenen Grundschulen auf die Zielräume visualisiert.
+aus den verschiedenen Grundschulen auf die Zielraeume visualisiert.
 Isolierte Kinder werden spezifisch markiert (z.B. farblich hervorgehoben).
 Tooltips zeigen beim Hovern Noten und Geschlecht der einzelnen Kinder an.
 }

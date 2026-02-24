@@ -2,19 +2,19 @@
 % Please edit documentation in R/06_evaluation.R
 \name{calculate_room_stats}
 \alias{calculate_room_stats}
-\title{Berechnet die statistische Übersichtstabelle der Räume}
+\title{Berechnet die statistische uebersichtstabelle der Raeume}
 \usage{
 calculate_room_stats(df)
 }
 \arguments{
-\item{df}{Ein Dataframe mit den finalen Schülerdaten (inkl. Zuordnung in \code{raum}).}
+\item{df}{Ein Dataframe mit den finalen Schuelerdaten (inkl. Zuordnung in \code{raum}).}
 }
 \value{
 Ein Dataframe (\code{tibble}), bei dem jede Zeile einem zugeteilten Raum
 entspricht, inklusive berechneter Metriken zur Evaluation der Gleichverteilung.
 }
 \description{
-Erzeugt eine aggregierte Übersichtstabelle für die Shiny-App, die
+Erzeugt eine aggregierte uebersichtstabelle fuer die Shiny-App, die
 wichtige Kennzahlen pro Raum (Mittelwerte, Standardabweichungen,
-Geschlechterverhältnis, Schulübergänge, Migrationsquote) übersichtlich darstellt.
+Geschlechterverhaeltnis, Schuluebergaenge, Migrationsquote) uebersichtlich darstellt.
 }

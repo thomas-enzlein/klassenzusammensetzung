@@ -16,6 +16,10 @@
 #' @param threshold Ein numerischer Schwellenwert für die Hebelwirkung (Standard: 3.5).
 #' @param small_school_max_n Die maximale Anzahl an Schülern, bei der eine Schule 
 #' noch als "klein" gilt und potenziell zusammengehalten werden soll (Standard: 3).
+#' @param selected_features Ein Vektor von Strings. Die Spaltennamen der Variablen,
+#' die für das Clustering verwendet werden sollen (z.B. Deutschnoten, Geschlecht).
+#' @param feature_weights Ein benannter numerischer Vektor. Die Gewichtungen 
+#' für die `selected_features` bei der Berechnung der Euklidischen Distanz.
 #'
 #' @return Ein Dataframe auf Schulebene (abgebende_schule) mit folgenden Spalten:
 #' \describe{

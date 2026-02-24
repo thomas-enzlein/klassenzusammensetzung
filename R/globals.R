@@ -21,5 +21,5 @@ utils::globalVariables(c(
   "mig_numeric", "n_in_bars", "is_isolated", "abgebende_schule_plot", "hover_text",
   "is_komplett_vereint", "has_isolated", "has_klumpen",
   "all_vereint", "any_isolated", "any_klumpen", 
-  "legend_name", "n_in_raum", "vorname", "name"
+  "legend_name", "n_in_raum", "vorname", "name", "hover_details"
 ))
