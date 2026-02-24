@@ -85,7 +85,8 @@ calculate_room_stats <- function(df) {
       `Anzahl Grundschulen`, `Groesste Grundschule`,
       `Verhaeltnis (J:M)`, `Mig.-Quote`,
       `Gy (n)`, `Gy/RS (n)`, `RS (n)`, `RS/HS (n)`, `HS (n)`,
-      dev_de, dev_dg, dev_ds, dev_mig, dev_gender
+      dev_de, dev_dg, dev_ds, dev_mig, dev_gender,
+      mean_de, mean_dg, mean_ds  # Kept for DT ordering
     )
     
   return(list(

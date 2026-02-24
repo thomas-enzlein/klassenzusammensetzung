@@ -245,7 +245,10 @@ server <- function(input, output, session) {
                       dom = 't',
                       scrollX = TRUE,
                       columnDefs = list(
-                        list(visible = FALSE, targets = c("dev_de", "dev_dg", "dev_ds", "dev_mig", "dev_gender"))
+                        list(visible = FALSE, targets = c("dev_de", "dev_dg", "dev_ds", "dev_mig", "dev_gender", "mean_de", "mean_dg", "mean_ds")),
+                        list(orderData = which(names(rv$stats) == "mean_de") - 1, targets = which(names(rv$stats) == "MW de (+/-SD)") - 1),
+                        list(orderData = which(names(rv$stats) == "mean_dg") - 1, targets = which(names(rv$stats) == "MW dg (+/-SD)") - 1),
+                        list(orderData = which(names(rv$stats) == "mean_ds") - 1, targets = which(names(rv$stats) == "MW ds (+/-SD)") - 1)
                       )
                     ),
                     rownames = FALSE) %>%
