@@ -7,7 +7,7 @@ test_that("read_and_clean_data parses excel file correctly", {
   
   expect_s3_class(df, "data.frame")
   expect_true(nrow(df) > 0)
-  expect_true(all(c("geschlecht", "de", "dg", "ds", "ue", "abgebende_schule", "mig") %in% names(df)))
+  expect_true(all(c("name", "vorname", "geschlecht", "de", "dg", "ds", "ue", "abgebende_schule", "mig", "forderkind") %in% names(df)))
   
   # Data type checks
   expect_true(is.numeric(df$de))

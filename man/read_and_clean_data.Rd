@@ -2,9 +2,10 @@
 % Please edit documentation in R/read_and_clean_data.R
 \name{read_and_clean_data}
 \alias{read_and_clean_data}
+\alias{try_rename_columns}
 \title{Liest die Klassenzusammensetzungs-Excel ein und bereitet sie vor.}
 \usage{
-read_and_clean_data(file_path)
+try_rename_columns(df)
 }
 \arguments{
 \item{file_path}{Ein String. Der absolute oder relative Pfad zur Excel-Datei,
