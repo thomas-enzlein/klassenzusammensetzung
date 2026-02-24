@@ -8,9 +8,27 @@ library(anticlust)
 library(lpSolve)
 library(shinycssloaders)
 library(shinyhelper)
+library(jsonlite)
+
+# Standardpfad aus lokaler Config lesen (falls vorhanden)
+default_path <- ""
+if (file.exists("local_settings.json")) {
+  try({
+    settings <- jsonlite::read_json("local_settings.json")
+    if (!is.null(settings$last_path)) {
+      default_path <- settings$last_path
+    }
+  }, silent = TRUE)
+}
 
 # Source alle ausgelagerten Business-Logiken aus dem R-Verzeichnis
-invisible(lapply(list.files("R", pattern = "\\.R$", full.names = TRUE), source))
+if (dir.exists("../../R")) {
+  invisible(lapply(list.files("../../R", pattern = "\\.R$", full.names = TRUE), source))
+} else if (dir.exists("R")) {
+  invisible(lapply(list.files("R", pattern = "\\.R$", full.names = TRUE), source))
+} else {
+  library(Klassenzusammensetzung)
+}
 
 ui <- page_sidebar(
   title = "Klassenzusammensetzung Dashboard",
@@ -24,6 +42,10 @@ ui <- page_sidebar(
               accept = c(".xls", ".xlsx"), 
               buttonLabel = "Auswählen", 
               placeholder = "Keine Datei ausgewählt"),
+
+    textInput("local_path", "Oder lokaler Dateipfad (Testzwecke):", value = default_path),
+    actionButton("load_local_btn", "Lokale Datei laden", class = "btn-secondary btn-sm"),
+    hr(),
               
     helper(numericInput("num_rooms", "Anzahl Ziel-Räume:", value = 10, min = 1, max = 20, step = 1),
            type = "markdown", content = "num_rooms"),
@@ -97,6 +119,36 @@ server <- function(input, output, session) {
       showNotification("Datei erfolgreich geladen!", type = "message")
     }, error = function(e) {
       showNotification(paste("Fehler beim Laden:", e$message), type = "error")
+    })
+  })
+  
+  observeEvent(input$load_local_btn, {
+    req(input$local_path)
+    tryCatch({
+      df <- read_and_clean_data(input$local_path)
+      rv$df <- df
+      showNotification("Lokale Datei erfolgreich geladen!", type = "message")
+      
+      # Pfad für die nächste Sitzung speichern
+      jsonlite::write_json(list(last_path = input$local_path), "local_settings.json", auto_unbox = TRUE)
+    }, error = function(e) {
+      showNotification(paste("Fehler beim Laden (Lokal):", e$message), type = "error")
+    })
+  })
+  
+  # Automatisches Laden beim Start, wenn ein Pfad existiert und gültig ist
+  observe({
+    req(input$local_path)
+    isolate({
+      if (input$local_path != "" && file.exists(input$local_path) && is.null(rv$df)) {
+        tryCatch({
+          df <- read_and_clean_data(input$local_path)
+          rv$df <- df
+          showNotification(paste("Automatisch geladen:", input$local_path), type = "message")
+        }, error = function(e) {
+          # Ignorieren falls automatisches Laden fehlschlägt
+        })
+      }
     })
   })
   
@@ -268,7 +320,11 @@ server <- function(input, output, session) {
                             "  if (type !== 'display') return data;",
                             "  var m = parseFloat(data);",
                             "  if (isNaN(m)) return '-';",
-                            "  var s = parseFloat(Array.isArray(row) ? row[", which(names(rv$stats) == "sd_ue") - 1, "] : row['sd_ue']);",
+                            "  var s = 0;",
+                            "  if (row) {",
+                            "    if (Array.isArray(row)) { s = parseFloat(row[", which(names(rv$stats) == "sd_ue") - 1, "]); }",
+                            "    else if (typeof row === 'object') { s = parseFloat(row['sd_ue']); }",
+                            "  }",
                             "  var s_safe = isNaN(s) ? 0 : s;",
                             "  var m_clip = Math.min(Math.max(m, 1), 5);",
                             "  var center_pct = (m_clip - 1) / 4 * 100;",
@@ -341,7 +397,11 @@ server <- function(input, output, session) {
                             "  if (type !== 'display') return data;",
                             "  var m = parseFloat(data);",
                             "  if (isNaN(m)) return '-';",
-                            "  var s = parseFloat(Array.isArray(row) ? row[", which(names(rv$ml_table) == "sd_ue") - 1, "] : row['sd_ue']);",
+                            "  var s = 0;",
+                            "  if (row) {",
+                            "    if (Array.isArray(row)) { s = parseFloat(row[", which(names(rv$ml_table) == "sd_ue") - 1, "]); }",
+                            "    else if (typeof row === 'object') { s = parseFloat(row['sd_ue']); }",
+                            "  }",
                             "  var s_safe = isNaN(s) ? 0 : s;",
                             "  var m_clip = Math.min(Math.max(m, 1), 5);",
                             "  var center_pct = (m_clip - 1) / 4 * 100;",
