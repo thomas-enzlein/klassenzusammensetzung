@@ -218,8 +218,9 @@ server <- function(input, output, session) {
     m_prop <- round(males / max(females, 1), 1)
     
     layout_column_wrap(
-      width = 1/5,
+      width = 1/6,
       value_box(title = "Schüler Gesamt", value = total_n, showcase = icon("users"), theme = "primary"),
+      value_box(title = "Ø de (einfach)", value = round(g$mean_de, 2), p(paste0("± ", round(g$sd_de, 2))), showcase = icon("book"), theme = "info"),
       value_box(title = "Ø dg (gewichtet)", value = round(g$mean_dg, 2), p(paste0("± ", round(g$sd_dg, 2))), showcase = icon("graduation-cap"), theme = "info"),
       value_box(title = "Ø ds (Sprache)", value = round(g$mean_ds, 2), p(paste0("± ", round(g$sd_ds, 2))), showcase = icon("language"), theme = "info"),
       value_box(title = "Jungen:Mädchen", value = paste0(m_prop, " : 1"), p(paste0(males, " M, ", females, " W")), showcase = icon("venus-mars"), theme = "secondary"),

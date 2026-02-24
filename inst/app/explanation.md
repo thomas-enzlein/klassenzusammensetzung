@@ -5,17 +5,17 @@ Gleichzeitig soll vermieden werden, dass Kinder aus kleinen Grundschulen völlig
 
 **So funktioniert der Algorithmus in 4 Stufen:**
 
-1. **Variable Leverage & Must-Links (Der Schutzschild für kleine Schulen):** 
-   Kleine Grundschulen können den Klassendurchschnitt unvorhergesehen verzerren. Der Algorithmus berechnet nun für jede Ihrer **gewählten Variablen** (Noten, Geschlecht etc.), wie stark eine kleine Schule vom Gesamtdurchschnitt abweicht. Dieser Hebel ("Leverage") wird gewichtet aufsummiert. Bei geringem Hebel werden die Kinder dieser kleinen Schule durch einen 'Must-Link' fest vereint, damit sie nicht getrennt werden. Ist der Hebel jedoch zu groß (über der gesetzten Schwelle), MÜSSEN sie getrennt werden, um die Leistungs-Fairness der anderen Klassen nicht zu gefährden.
+1. **Variable Leverage & Must-Links:** 
+   Kleine Grundschulen können den Klassendurchschnitt unvorhergesehen verzerren falls sie einen großen Hebel haben. Der Algorithmus berechnet nun für jede Ihrer **gewählten Variablen** (Noten, Geschlecht etc.), wie stark eine kleine Schule vom Gesamtdurchschnitt abweicht. Dieser Hebel ("Leverage") wird gewichtet aufsummiert. Bei geringem Hebel werden die Kinder dieser kleinen Schule durch einen 'Must-Link' fest vereint. Ist der Hebel jedoch zu groß (über der gesetzten Schwelle), MÜSSEN sie getrennt werden, um die Leistungs-Fairness der anderen Klassen nicht zu gefährden.
    
-2. **K-Means Anticlustering (Das Vor-Puzzle):** 
-   Vor der finalen Raumzuteilung werden die Kinder anhand der gewählten Variablen (Noten, Geschlecht, Migration, Unterrichtungsempfehlung) in K-Means-Basierte **Kleingruppen** (genau doppelt so viele wie Ziel-Räume) geclustert. Diese Zwischengruppen sind bereits maximal heterogen durchmischt. Sie können über die Schieberegler links eigene Gewichtungen festlegen (z.B. Geschlecht doppelt so stark werten wie Noten).
+2. **K-Means Anticlustering:** 
+   Vor der finalen Raumzuteilung werden die Kinder anhand der gewählten Variablen (Noten, Geschlecht, Migration, Uebergangsempfehlung) in K-Means-Basierte **Kleingruppen** (genau doppelt so viele wie Ziel-Räume) geclustert. Diese Zwischengruppen sind bereits maximal heterogen durchmischt. Sie können über die Schieberegler links eigene Gewichtungen festlegen (z.B. Geschlecht doppelt so stark werten wie Noten).
    
-3. **ILP Optimal Matching (Das perfekte Zusammenfügen):** 
-   Die homogenen Kleingruppen werden durch einen strikt mathematischen Ansatz (*Integer Linear Programming*, `lpSolve`) paarweise zu den finalen Räumen kombiniert. Der Algorithmus berechnet für jede erdenkliche Kombination Strafpunkte (Ungleichgewicht in Noten, Geschlecht und vor allem Strafen für Isolierung von Schülern) und findet und garantiert die **absolut optimale Paarkombination** für den gesamten Jahrgang.
+3. **ILP Optimal Matching:** 
+   Die homogenen Kleingruppen werden durch einen strikt mathematischen Ansatz (*Integer Linear Programming*, `lpSolve`) paarweise zu den finalen Räumen kombiniert. Der Algorithmus berechnet für jede erdenkliche Kombination Strafpunkte (Ungleichgewicht in Noten, Geschlecht und vor allem Strafen für Isolierung von Schülern) und findet garantiert die **optimale Paarkombination** für den gesamten Jahrgang.
    
-4. **Micro-Swaps (Der Feinschliff für 0 Isolierte):** 
-   Sollten durch ungünstige Verhältnisse dennoch einzelne Kinder nach dem ILP isoliert in einem Raum landen, aktiviert sich ein verdeckter Tausch-Mechanismus. Er sucht in anderen Räumen nach perfekten "Statistik-Zwillingen" (gleiches Geschlecht, gleiche Schulformempfehlung, max 0.6 Punkte Notenabweichung) und **tauscht diese Kinder unmerklich aus**. Dadurch eliminiert das Modell die letzten Isolierten konsequent, ohne dass die Durchschnittsnoten der Räume kippen.
+4. **Micro-Swaps:** 
+   Sollten durch ungünstige Verhältnisse dennoch einzelne Kinder nach dem ILP isoliert in einem Raum landen kommt ein Tausch-Mechanismus zum Einsatz. Er sucht in anderen Räumen nach "Statistik-Zwillingen" (gleiches Geschlecht, gleiche Schulformempfehlung, max 0.6 Punkte Notenabweichung) und **tauscht diese Kinder aus**. Dadurch eliminiert das Modell die letzten Isolierten konsequent, ohne dass die Durchschnittsnoten der Räume kippen.
    
 ***
 
