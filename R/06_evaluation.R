@@ -99,7 +99,7 @@ calculate_room_stats <- function(df) {
       `MW de (+/-SD)` = mapply(fmt_stats, mean_de, sd_de),
       `MW dg (+/-SD)` = mapply(fmt_stats, mean_dg, sd_dg),
       `MW ds (+/-SD)` = mapply(fmt_stats, mean_ds, sd_ds),
-      `UE (Bar)` = mapply(build_ue_html, mean_ue, sd_ue),
+      `UE (Bar)` = round(mean_ue, 2), # Wird im UI via JS zum Bar gerendert
       `Mig.-Quote` = paste0(round(mig_room * 100, 0), " %"),
       
       # Versteckte Deviance-Spalten fuer das UI
@@ -111,12 +111,13 @@ calculate_room_stats <- function(df) {
     ) %>%
     rename(`Raum` = raum) %>%
     select(
-      `Raum`, `Schuelerzahl`, 
+       `Raum`, `Schuelerzahl`, 
       `MW de (+/-SD)`, `MW dg (+/-SD)`, `MW ds (+/-SD)`,
       `Anzahl Grundschulen`, `Groesste Grundschule`,
       `Verhaeltnis (J:M)`, `Mig.-Quote`, `UE (Bar)`,
       dev_de, dev_dg, dev_ds, dev_mig, dev_gender,
-      mean_de, mean_dg, mean_ds, mean_ue  # Kept for DT ordering
+      mean_de, mean_dg, mean_ds, mean_ue,
+      sd_ue # Wird im UI via JS fuer den Bar benoetigt
     )
     
   return(list(
@@ -287,7 +288,7 @@ calculate_school_stats <- function(df, all_schools_leverage, must_link_schools_v
       `MW de (+/-SD)` = mapply(fmt_stats, mean_de, sd_de),
       `MW dg (+/-SD)` = mapply(fmt_stats, mean_dg, sd_dg),
       `MW ds (+/-SD)` = mapply(fmt_stats, mean_ds, sd_ds),
-      `UE (Bar)` = mapply(build_ue_html, mean_ue, sd_ue),
+      `UE (Bar)` = round(mean_ue, 2), # Wird im UI via JS zum Bar gerendert
       `Mig.-Quote` = paste0(round(mig_room * 100, 0), " %"),
       
       dev_de = abs(mean_de - df_global$mean_de),
@@ -295,10 +296,8 @@ calculate_school_stats <- function(df, all_schools_leverage, must_link_schools_v
       dev_ds = abs(mean_ds - df_global$mean_ds),
       dev_mig = abs(mig_room - df_global$mig_quote),
       dev_gender = abs(prop_m_room - df_global$prop_m)
-    )
-
-  # Join with Leverage data
-  sch_stats <- sch_stats %>%
+    ) %>%
+    # Join with Leverage data
     left_join(all_schools_leverage %>% select(abgebende_schule, max_leverage), by = "abgebende_schule") %>%
     mutate(
       `Must-Link (*)` = if_else(abgebende_schule %in% must_link_schools_vec, "X", ""),
@@ -310,7 +309,8 @@ calculate_school_stats <- function(df, all_schools_leverage, must_link_schools_v
       `MW de (+/-SD)`, `MW dg (+/-SD)`, `MW ds (+/-SD)`,
       `Verhaeltnis (J:M)`, `Mig.-Quote`, `UE (Bar)`,
       dev_de, dev_dg, dev_ds, dev_mig, dev_gender,
-      max_leverage, mean_de, mean_dg, mean_ds, mean_ue
+      max_leverage, mean_de, mean_dg, mean_ds, mean_ue,
+      sd_ue # Wird im UI via JS fuer den Bar benoetigt
     ) %>%
     arrange(desc(`Must-Link (*)`), desc(`Max Leverage`))
     
