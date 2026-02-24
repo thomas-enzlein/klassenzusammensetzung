@@ -294,12 +294,20 @@ server <- function(input, output, session) {
   
   output$stats_table <- renderDT({
     req(rv$stats)
-    datatable(rv$stats, options = list(pageLength = 20, scrollX = TRUE))
+    # Nur Spalten bis "UE (Bar)" anzeigen
+    display_df <- rv$stats %>% 
+      select(1:which(names(.) == "UE (Bar)"))
+      
+    datatable(display_df, options = list(pageLength = 20, scrollX = TRUE))
   })
   
   output$must_links_table <- renderDT({
     req(rv$ml_table)
-    datatable(rv$ml_table, filter = 'top', options = list(pageLength = 10, scrollX = TRUE))
+    # Nur Spalten bis "UE (Bar)" anzeigen
+    display_df <- rv$ml_table %>% 
+      select(1:which(names(.) == "UE (Bar)"))
+      
+    datatable(display_df, filter = 'top', options = list(pageLength = 10, scrollX = TRUE))
   })
   
   output$download_res <- downloadHandler(
