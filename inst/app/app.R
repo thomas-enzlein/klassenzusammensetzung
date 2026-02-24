@@ -364,7 +364,7 @@ server <- function(input, output, session) {
                   backgroundSize = '100% 70%', backgroundRepeat = 'no-repeat', backgroundPosition = 'center')
                   
     return(dt)
-  })
+  }, server = FALSE)
   
   output$must_links_table <- renderDT({
     req(rv$ml_table)
@@ -442,7 +442,7 @@ server <- function(input, output, session) {
                   color = styleEqual(c("X", ""), c("white", "black")))
                   
     return(dt)
-  })
+  }, server = FALSE)
   
   output$download_res <- downloadHandler(
     filename = function() {
