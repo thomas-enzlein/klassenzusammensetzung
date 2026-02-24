@@ -1,4 +1,4 @@
-#' @importFrom dplyr mutate group_by summarise n n_distinct rename ungroup as_tibble first if_else left_join select arrange desc distinct
+#' @importFrom dplyr mutate mutate_if group_by summarise n n_distinct rename ungroup as_tibble first if_else left_join select arrange desc distinct
 #' @importFrom magrittr %>%
 #' @importFrom stats sd
 #' @importFrom stringr str_sub
@@ -70,7 +70,8 @@ calculate_room_stats <- function(df) {
       sd_ue = sd(ue, na.rm = TRUE),
       mig_quote = mean(mig_numeric, na.rm = TRUE),
       prop_m = mean(geschlecht == "m", na.rm = TRUE)
-    )
+    ) %>%
+    mutate_if(is.numeric, ~ ifelse(is.nan(.) | is.infinite(.), NA_real_, .))
   
   df_stats <- df %>%
     mutate(mig_numeric = as.numeric(mig == "ja")) %>%
@@ -95,6 +96,7 @@ calculate_room_stats <- function(df) {
       ),
       .groups = "drop"
     ) %>%
+    mutate_if(is.numeric, ~ ifelse(is.nan(.) | is.infinite(.), NA_real_, .)) %>%
     mutate(
       `MW de (+/-SD)` = mapply(fmt_stats, mean_de, sd_de),
       `MW dg (+/-SD)` = mapply(fmt_stats, mean_dg, sd_dg),
@@ -261,7 +263,8 @@ calculate_school_stats <- function(df, all_schools_leverage, must_link_schools_v
       mean_ds = mean(ds, na.rm = TRUE),
       mig_quote = mean(mig_numeric, na.rm = TRUE),
       prop_m = mean(geschlecht == "m", na.rm = TRUE)
-    )
+    ) %>%
+    mutate_if(is.numeric, ~ ifelse(is.nan(.) | is.infinite(.), NA_real_, .))
     
   sch_stats <- df %>%
     mutate(mig_numeric = as.numeric(mig == "ja")) %>%
@@ -284,6 +287,7 @@ calculate_school_stats <- function(df, all_schools_leverage, must_link_schools_v
       ),
       .groups = "drop"
     ) %>%
+    mutate_if(is.numeric, ~ ifelse(is.nan(.) | is.infinite(.), NA_real_, .)) %>%
     mutate(
       `MW de (+/-SD)` = mapply(fmt_stats, mean_de, sd_de),
       `MW dg (+/-SD)` = mapply(fmt_stats, mean_dg, sd_dg),

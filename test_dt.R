@@ -1,0 +1,17 @@
+library(dplyr)
+source("R/06_evaluation.R")
+source("tests/testthat/helper-data.R")
+
+df <- get_dummy_data()
+df$raum <- sample(1:5, nrow(df), replace = TRUE) 
+stats_list <- calculate_room_stats(df)
+print("CLASS for UE (Bar):")
+print(class(stats_list$room_stats$`UE (Bar)`))
+print("VALUES for UE (Bar):")
+print(stats_list$room_stats$`UE (Bar)`)
+
+sch_stats <- calculate_school_stats(df, data.frame(abgebende_schule=unique(df$abgebende_schule), max_leverage=runif(length(unique(df$abgebende_schule)))), unique(df$abgebende_schule)[1])
+print("SCHCLASS for UE (Bar):")
+print(class(sch_stats$`UE (Bar)`))
+print("SCHVALUES for UE (Bar):")
+print(sch_stats$`UE (Bar)`)
