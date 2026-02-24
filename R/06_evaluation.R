@@ -15,25 +15,43 @@
 #' 
 #' @param df Ein Dataframe mit den finalen Schuelerdaten (inkl. Zuordnung in `raum`).
 #'
-#' @return Ein Dataframe (`tibble`), bei dem jede Zeile einem zugeteilten Raum 
-#' entspricht, inklusive berechneter Metriken zur Evaluation der Gleichverteilung.
+#' @return Eine Liste mit zwei Elementen: 
+#' `room_stats` (ein Dataframe mit berechneten Raumspezifischen Metriken und Abweichungen) 
+#' und `global_stats` (Basis-Statistiken ueber alle Kinder).
 calculate_room_stats <- function(df) {
   # Hilfsfunktion fuer Mittelwert +/- SD
-  fmt_stats <- function(x) {
-    m <- mean(x, na.rm = TRUE)
-    s <- sd(x, na.rm = TRUE)
+  fmt_stats <- function(m, s) {
     if (is.na(s)) return(as.character(round(m, 2)))
     return(paste0(round(m, 2), " +/- ", round(s, 2)))
   }
+  
+  # Globale Werte (als Basis fuer Visualisierungen und Deviance-Berechnungen)
+  df_global <- df %>%
+    mutate(mig_numeric = as.numeric(mig == "ja")) %>%
+    summarise(
+      mean_de = mean(de, na.rm = TRUE),
+      sd_de = sd(de, na.rm = TRUE),
+      mean_dg = mean(dg, na.rm = TRUE),
+      sd_dg = sd(dg, na.rm = TRUE),
+      mean_ds = mean(ds, na.rm = TRUE),
+      sd_ds = sd(ds, na.rm = TRUE),
+      mig_quote = mean(mig_numeric, na.rm = TRUE),
+      prop_m = mean(geschlecht == "m", na.rm = TRUE)
+    )
   
   df_stats <- df %>%
     mutate(mig_numeric = as.numeric(mig == "ja")) %>%
     group_by(raum) %>%
     summarise(
       `Schuelerzahl` = n(),
-      `Mittelwert de (+/-SD)` = fmt_stats(de),
-      `Mittelwert dg (+/-SD)` = fmt_stats(dg),
-      `Mittelwert ds (+/-SD)` = fmt_stats(ds),
+      mean_de = mean(de, na.rm = TRUE),
+      sd_de = sd(de, na.rm = TRUE),
+      mean_dg = mean(dg, na.rm = TRUE),
+      sd_dg = sd(dg, na.rm = TRUE),
+      mean_ds = mean(ds, na.rm = TRUE),
+      sd_ds = sd(ds, na.rm = TRUE),
+      mig_room = mean(mig_numeric, na.rm = TRUE),
+      prop_m_room = mean(geschlecht == "m", na.rm = TRUE),
       `Anzahl Grundschulen` = n_distinct(abgebende_schule),
       `Groesste Grundschule` = max(table(abgebende_schule)),
       `Verhaeltnis (J:M)` = paste0(
@@ -45,12 +63,35 @@ calculate_room_stats <- function(df) {
       `RS (n)` = sum(round(ue) == 3, na.rm = TRUE),
       `RS/HS (n)` = sum(round(ue) == 2, na.rm = TRUE),
       `HS (n)` = sum(round(ue) == 1, na.rm = TRUE),
-      `Mig.-Quote` = paste0(round(mean(mig_numeric, na.rm = TRUE) * 100, 0), " %"),
       .groups = "drop"
     ) %>%
-    rename(`Raum` = raum)
+    mutate(
+      `MW de (+/-SD)` = mapply(fmt_stats, mean_de, sd_de),
+      `MW dg (+/-SD)` = mapply(fmt_stats, mean_dg, sd_dg),
+      `MW ds (+/-SD)` = mapply(fmt_stats, mean_ds, sd_ds),
+      `Mig.-Quote` = paste0(round(mig_room * 100, 0), " %"),
+      
+      # Versteckte Deviance-Spalten fuer das UI
+      dev_de = abs(mean_de - df_global$mean_de),
+      dev_dg = abs(mean_dg - df_global$mean_dg),
+      dev_ds = abs(mean_ds - df_global$mean_ds),
+      dev_mig = abs(mig_room - df_global$mig_quote),
+      dev_gender = abs(prop_m_room - df_global$prop_m)
+    ) %>%
+    rename(`Raum` = raum) %>%
+    select(
+      `Raum`, `Schuelerzahl`, 
+      `MW de (+/-SD)`, `MW dg (+/-SD)`, `MW ds (+/-SD)`,
+      `Anzahl Grundschulen`, `Groesste Grundschule`,
+      `Verhaeltnis (J:M)`, `Mig.-Quote`,
+      `Gy (n)`, `Gy/RS (n)`, `RS (n)`, `RS/HS (n)`, `HS (n)`,
+      dev_de, dev_dg, dev_ds, dev_mig, dev_gender
+    )
     
-  return(df_stats)
+  return(list(
+    room_stats = df_stats,
+    global_stats = df_global
+  ))
 }
 
 #' @export

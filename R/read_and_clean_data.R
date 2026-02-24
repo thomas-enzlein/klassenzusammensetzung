@@ -57,8 +57,9 @@ try_rename_columns <- function(df) {
 #'   \item{name, vorname}{Name und Vorname des Kindes.}
 #'   \item{geschlecht}{Geschlecht ("m" oder "w").}
 #'   \item{abgebende_schule}{Der Name der Grundschule.}
-#'   \item{dg}{Deutschnote genormt.}
-#'   \item{ds}{Deutschnote schulintern.}
+#'   \item{dg}{Durchschnittsnote gewichtet.}
+#'   \item{ds}{Durchschnittsnote Sprache.}
+#'   \item{de}{Durchschnittsnote einfach.}
 #'   \item{ue}{uebergangsempfehlung (numerisch kodiert 1 bis 5).}
 #'   \item{mig}{Migrationshintergrund ("ja" oder "nein").}
 #' }

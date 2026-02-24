@@ -2,13 +2,18 @@ test_that("calculate_room_stats returns correct evaluation dataframe structure",
   df <- get_dummy_data(50)
   df$raum <- rep(1:5, each = 10) # Mock 5 rooms
   
-  stats_df <- calculate_room_stats(df)
+  stats_list <- calculate_room_stats(df)
+  stats_df <- stats_list$room_stats
+  global_df <- stats_list$global_stats
   
+  expect_type(stats_list, "list")
   expect_s3_class(stats_df, "data.frame")
+  expect_s3_class(global_df, "data.frame")
   expect_true(nrow(stats_df) == 5)
-  expect_true(all(c("Raum", "Schuelerzahl", "Mittelwert de (+/-SD)", "Mittelwert dg (+/-SD)", "Mittelwert ds (+/-SD)", 
+  expect_true(all(c("Raum", "Schuelerzahl", "MW de (+/-SD)", "MW dg (+/-SD)", "MW ds (+/-SD)", 
                     "Anzahl Grundschulen", "Groesste Grundschule", "Verhaeltnis (J:M)", 
-                    "Gy (n)", "Gy/RS (n)", "RS (n)", "RS/HS (n)", "HS (n)", "Mig.-Quote") %in% names(stats_df)))
+                    "Gy (n)", "Gy/RS (n)", "RS (n)", "RS/HS (n)", "HS (n)", "Mig.-Quote",
+                    "dev_de", "dev_dg", "dev_ds", "dev_mig", "dev_gender") %in% names(stats_df)))
 })
 
 test_that("create_interactive_plot produces interactive Plotly object", {

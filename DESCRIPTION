@@ -1,7 +1,7 @@
 Package: Klassenzusammensetzung
 Title: Algorithmische Klassenbildung
 Version: 1.0.0
-Authors@R: person("Thomas", role = c("aut", "cre"), email = "thomas@example.com")
+Authors@R: person("Thomas", "Enzlein", role = c("aut", "cre"), email = "thomas.enzlein@gmail.com")
 Description: Shiny Applikation und R-Paket zur algorithmischen Klassenbildung auf Basis von Anticlustering und ILP-Matching.
 License: MIT + file LICENSE
 Encoding: UTF-8

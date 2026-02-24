@@ -68,6 +68,9 @@ ui <- page_sidebar(
         withSpinner(type = 8, color = "#2c3e50")
     ),
     nav_panel("Räume (Diagnose)", 
+      h5("Kohorten-Übersicht (Gesamter Jahrgang)"),
+      uiOutput("global_stats_ui"),
+      hr(),
       h5("Statistischer Überblick pro Raum"),
       DTOutput("stats_table"),
       hr(),
@@ -84,7 +87,7 @@ server <- function(input, output, session) {
   
   observe_helpers()
   
-  rv <- reactiveValues(df = NULL, final_df = NULL, stats = NULL, plot = NULL, ml_table = NULL)
+  rv <- reactiveValues(df = NULL, final_df = NULL, stats = NULL, global_stats = NULL, plot = NULL, ml_table = NULL)
   
   observeEvent(input$upload_file, {
     req(input$upload_file)
@@ -182,7 +185,11 @@ server <- function(input, output, session) {
       incProgress(0.9, detail = "Erstelle Auswertungen")
       rv$final_df <- df
       rv$ml_table <- ml_res$small_schools_leverage
-      rv$stats <- calculate_room_stats(df)
+      
+      stats_list <- calculate_room_stats(df)
+      rv$stats <- stats_list$room_stats
+      rv$global_stats <- stats_list$global_stats
+      
       eval_res <- create_interactive_plot(df, ml_res$small_schools_leverage)
       rv$plot <- eval_res$plot_interactive
       
@@ -201,9 +208,63 @@ server <- function(input, output, session) {
     rv$plot
   })
   
+  output$global_stats_ui <- renderUI({
+    req(rv$global_stats)
+    g <- rv$global_stats
+    
+    total_n <- nrow(rv$final_df)
+    males <- sum(rv$final_df$geschlecht == "m", na.rm = TRUE)
+    females <- sum(rv$final_df$geschlecht == "w", na.rm = TRUE)
+    m_prop <- round(males / max(females, 1), 1)
+    
+    layout_column_wrap(
+      width = 1/5,
+      value_box(title = "Schüler Gesamt", value = total_n, showcase = icon("users"), theme = "primary"),
+      value_box(title = "Ø dg (gewichtet)", value = round(g$mean_dg, 2), p(paste0("± ", round(g$sd_dg, 2))), showcase = icon("graduation-cap"), theme = "info"),
+      value_box(title = "Ø ds (Sprache)", value = round(g$mean_ds, 2), p(paste0("± ", round(g$sd_ds, 2))), showcase = icon("language"), theme = "info"),
+      value_box(title = "Jungen:Mädchen", value = paste0(m_prop, " : 1"), p(paste0(males, " M, ", females, " W")), showcase = icon("venus-mars"), theme = "secondary"),
+      value_box(title = "Migrationsquote", value = paste0(round(g$mig_quote * 100, 1), "%"), showcase = icon("globe"), theme = "secondary")
+    )
+  })
+  
   output$stats_table <- renderDT({
     req(rv$stats)
-    datatable(rv$stats, options = list(pageLength = 10, dom = 't'))
+    
+    # Define color mappings for deviations. 
+    # Use max expected deviations to scale the background bars fairly
+    max_dev_de <- max(rv$stats$dev_de, 0.5, na.rm = TRUE)
+    max_dev_dg <- max(rv$stats$dev_dg, 0.5, na.rm = TRUE)
+    max_dev_ds <- max(rv$stats$dev_ds, 0.5, na.rm = TRUE)
+    max_dev_mig <- max(rv$stats$dev_mig, 0.1, na.rm = TRUE)
+    max_dev_gen <- max(rv$stats$dev_gender, 0.1, na.rm = TRUE)
+    
+    dt <- datatable(rv$stats, 
+                    options = list(
+                      pageLength = 20, 
+                      dom = 't',
+                      scrollX = TRUE,
+                      columnDefs = list(
+                        list(visible = FALSE, targets = c("dev_de", "dev_dg", "dev_ds", "dev_mig", "dev_gender"))
+                      )
+                    ),
+                    rownames = FALSE) %>%
+      formatStyle('MW de (+/-SD)', 'dev_de',
+                  background = styleColorBar(c(0, max_dev_de), '#ffc107'),
+                  backgroundSize = '100% 70%', backgroundRepeat = 'no-repeat', backgroundPosition = 'center') %>%
+      formatStyle('MW dg (+/-SD)', 'dev_dg',
+                  background = styleColorBar(c(0, max_dev_dg), '#ffc107'),
+                  backgroundSize = '100% 70%', backgroundRepeat = 'no-repeat', backgroundPosition = 'center') %>%
+      formatStyle('MW ds (+/-SD)', 'dev_ds',
+                  background = styleColorBar(c(0, max_dev_ds), '#ffc107'),
+                  backgroundSize = '100% 70%', backgroundRepeat = 'no-repeat', backgroundPosition = 'center') %>%
+      formatStyle('Mig.-Quote', 'dev_mig',
+                  background = styleColorBar(c(0, max_dev_mig), '#17a2b8'),
+                  backgroundSize = '100% 70%', backgroundRepeat = 'no-repeat', backgroundPosition = 'center') %>%
+      formatStyle('Verhaeltnis (J:M)', 'dev_gender',
+                  background = styleColorBar(c(0, max_dev_gen), '#17a2b8'),
+                  backgroundSize = '100% 70%', backgroundRepeat = 'no-repeat', backgroundPosition = 'center')
+                  
+    return(dt)
   })
   
   output$must_links_table <- renderDT({

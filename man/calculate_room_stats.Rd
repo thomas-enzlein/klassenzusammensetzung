@@ -10,8 +10,9 @@ calculate_room_stats(df)
 \item{df}{Ein Dataframe mit den finalen Schuelerdaten (inkl. Zuordnung in \code{raum}).}
 }
 \value{
-Ein Dataframe (\code{tibble}), bei dem jede Zeile einem zugeteilten Raum
-entspricht, inklusive berechneter Metriken zur Evaluation der Gleichverteilung.
+Eine Liste mit zwei Elementen:
+\code{room_stats} (ein Dataframe mit berechneten Raumspezifischen Metriken und Abweichungen)
+und \code{global_stats} (Basis-Statistiken ueber alle Kinder).
 }
 \description{
 Erzeugt eine aggregierte uebersichtstabelle fuer die Shiny-App, die
