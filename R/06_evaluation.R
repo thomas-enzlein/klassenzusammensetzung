@@ -38,20 +38,18 @@ calculate_room_stats <- function(df) {
     width_pct <- right_pct - left_pct
     
     html <- paste0(
-      '<div style="line-height: 1; padding: 2px 0;">',
-        '<div style="display: flex; align-items: center; gap: 6px; justify-content: center;">',
-          '<span style="font-size: 0.7rem; color: #6c757d; width: 12px; text-align: right;">HS</span>',
-          '<div style="flex-grow: 1; max-width: 100px; position: relative; height: 12px; background-color: #e9ecef; border-radius: 2px;">',
-            '<div style="position: absolute; left: ', right_pct, '%; width: 2px; height: 100%; background-color: #adb5bd;"></div>',
-            '<div style="position: absolute; left: ', left_pct, '%; width: ', width_pct, '%; height: 100%; background-color: #adb5bd; border-radius: 1px;"></div>',
-            '<div style="position: absolute; left: ', left_pct, '%; width: 2px; height: 100%; background-color: #adb5bd;"></div>',
-            '<div style="position: absolute; left: ', center_pct, '%; width: 2px; height: 100%; background-color: #212529; transform: translateX(-50%);"></div>',
-          '</div>',
-          '<span style="font-size: 0.7rem; color: #6c757d; width: 12px; text-align: left;">Gy</span>',
+      '<div style="display: flex; align-items: center; justify-content: flex-start; gap: 4px; line-height: 1; white-space: nowrap;">',
+        '<span style="font-size: 0.7rem; color: #6c757d;">HS</span>',
+        '<div style="width: 50px; position: relative; height: 10px; background-color: #e9ecef; border-radius: 2px; flex-shrink: 0;">',
+          '<div style="position: absolute; left: ', right_pct, '%; width: 1px; height: 100%; background-color: #adb5bd;"></div>',
+          '<div style="position: absolute; left: ', left_pct, '%; width: ', width_pct, '%; height: 100%; background-color: #adb5bd; border-radius: 1px;"></div>',
+          '<div style="position: absolute; left: ', left_pct, '%; width: 1px; height: 100%; background-color: #adb5bd;"></div>',
+          '<div style="position: absolute; left: ', center_pct, '%; width: 2px; height: 100%; background-color: #212529; transform: translateX(-50%);"></div>',
         '</div>',
-        '<div style="text-align: center; font-size: 0.75rem; margin-top: 2px; color: #495057;">', 
+        '<span style="font-size: 0.7rem; color: #6c757d;">Gy</span>',
+        '<span style="font-size: 0.8rem; color: #495057; margin-left: 6px;">', 
           round(m, 2), if (!is.na(s) && s > 0) paste0(" &plusmn; ", round(s, 2)) else "", 
-        '</div>',
+        '</span>',
       '</div>'
     )
     return(html)
