@@ -2,36 +2,14 @@
 #' @importFrom janitor clean_names
 #' @importFrom dplyr as_tibble mutate case_when filter
 #' @importFrom magrittr %>%
-#' @export
-#' @name read_and_clean_data
-#' @title Liest die Klassenzusammensetzungs-Excel ein und bereitet sie vor.
-#' 
-#' @description 
-#' Importiert die Rohdaten aus einer Excel-Datei, bereinigt die Spaltennamen 
-#' und führt erste Datentransformationen durch. Dies umfasst das Umbenennen,
-#' Typisieren und Filtern (z.B. Entfernung von Schülern, die an andere Schulen
-#' weiterziehen).
-#' 
-#' @param file_path Ein String. Der absolute oder relative Pfad zur Excel-Datei, 
-#' die die Schülerdaten enthält.
-#'
-#' @return Ein Dataframe (`tibble`) mit den bereinigten und typisierten Daten.
-#' Die wichtigsten Spalten:
-#' \describe{
-#'   \item{name, vorname}{Name und Vorname des Kindes.}
-#'   \item{geschlecht}{Geschlecht ("m" oder "w").}
-#'   \item{abgebende_schule}{Der Name der Grundschule.}
-#'   \item{dg}{Deutschnote genormt.}
-#'   \item{ds}{Deutschnote schulintern.}
-#'   \item{ue}{Übergangsempfehlung (numerisch kodiert 1 bis 5).}
-#'   \item{mig}{Migrationshintergrund ("ja" oder "nein").}
-#' }
+
 try_rename_columns <- function(df) {
   # Synonym-Wörterbuch (Name nach clean_names -> Interner Name)
   aliases <- c(
-    "nr"                    = "kid_id", 
+    "nr"                    = "id", 
     "grundschule"           = "abgebende_schule",
     "herkunftsschule"       = "abgebende_schule",
+    "schule"                = "abgebende_schule", 
     "geschl"                = "geschlecht",
     "m_w"                   = "geschlecht",
     "sex"                   = "geschlecht",
@@ -59,6 +37,31 @@ try_rename_columns <- function(df) {
   return(df)
 }
 
+
+#' @export
+#' @name read_and_clean_data
+#' @title Liest die Klassenzusammensetzungs-Excel ein und bereitet sie vor.
+#' 
+#' @description 
+#' Importiert die Rohdaten aus einer Excel-Datei, bereinigt die Spaltennamen 
+#' und fuehrt erste Datentransformationen durch. Dies umfasst das Umbenennen,
+#' Typisieren und Filtern (z.B. Entfernung von Schuelern, die an andere Schulen
+#' weiterziehen).
+#' 
+#' @param file_path Ein String. Der absolute oder relative Pfad zur Excel-Datei, 
+#' die die Schuelerdaten enthaelt.
+#'
+#' @return Ein Dataframe (`tibble`) mit den bereinigten und typisierten Daten.
+#' Die wichtigsten Spalten:
+#' \describe{
+#'   \item{name, vorname}{Name und Vorname des Kindes.}
+#'   \item{geschlecht}{Geschlecht ("m" oder "w").}
+#'   \item{abgebende_schule}{Der Name der Grundschule.}
+#'   \item{dg}{Deutschnote genormt.}
+#'   \item{ds}{Deutschnote schulintern.}
+#'   \item{ue}{uebergangsempfehlung (numerisch kodiert 1 bis 5).}
+#'   \item{mig}{Migrationshintergrund ("ja" oder "nein").}
+#' }
 read_and_clean_data <- function(file_path) {
   # 1. Daten einlesen und bereinigen
   df <- suppressWarnings(read_excel(file_path, skip = 7, guess_max = 10000)) %>%
@@ -67,22 +70,22 @@ read_and_clean_data <- function(file_path) {
   # 2. Toleranz: Spaltennamen sanft anpassen
   df <- try_rename_columns(df)
   
-  # 3. Striktes Prüfen auf Pflichtspalten
+  # 3. Striktes Pruefen auf Pflichtspalten
   required_cols <- c("name", "vorname", "geschlecht", "abgebende_schule", "dg", "ds", "de", "ue", "mig")
   missing_required <- setdiff(required_cols, names(df))
   
   if (length(missing_required) > 0) {
     stop(
-      "Fehlerhafte Excel-Vorlage: Es fehlen zwingend benötigte Spalten: '", 
+      "Fehlerhafte Excel-Vorlage: Es fehlen zwingend benoetigte Spalten: '", 
       paste(missing_required, collapse = "', '"), 
-      "'. Bitte überprüfen Sie Ihre Tabelle! (Gefundene Spalten: '", 
+      "'. Bitte ueberpruefen Sie Ihre Tabelle! (Gefundene Spalten: '", 
       paste(names(df), collapse = "', '"), "')"
     )
   }
   
-  # 4. Weiches Prüfen auf optionale Spalten (Forderkind)
+  # 4. Weiches Pruefen auf optionale Spalten (Forderkind)
   if (!"forderkind" %in% names(df)) {
-    warning("Hinweis: Die Spalte 'forderkind' wurde nicht gefunden. Es wird angenommen, dass kein Kind spezifischen Förderbedarf hat.")
+    warning("Hinweis: Die Spalte 'forderkind' wurde nicht gefunden. Es wird angenommen, dass kein Kind spezifischen Foerderbedarf hat.")
     df$forderkind <- "nein"
   }
   

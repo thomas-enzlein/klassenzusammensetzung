@@ -2,7 +2,8 @@
 #' @importFrom magrittr %>%
 #' @importFrom stats sd
 #' @importFrom stringr str_sub
-#' @import ggplot2 plotly
+#' @importFrom ggplot2 ggplot aes geom_col scale_fill_manual scale_color_manual theme_minimal labs theme element_text
+#' @importFrom plotly ggplotly layout
 #' @export
 #' @name calculate_room_stats
 #' @title Berechnet die statistische uebersichtstabelle der Raeume

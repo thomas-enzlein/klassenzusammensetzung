@@ -2,7 +2,8 @@
 #'
 #' @description Launches the interactive Shiny application for algorithmic class composition.
 #' 
-#' @import shiny
+#' @import shiny bslib shinycssloaders shinyhelper
+#' @importFrom DT DTOutput renderDT datatable formatRound
 #' @export
 run_app <- function() {
   app_dir <- system.file("app", package = "Klassenzusammensetzung")
