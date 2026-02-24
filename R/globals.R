@@ -25,7 +25,7 @@ utils::globalVariables(c(
   
   # Neu hinzugekommen fuer erweiterte Diagnostics (calculate_room_stats)
   "Anzahl Grundschulen", "Groesste Grundschule", "Gy (n)", "Gy/RS (n)", "HS (n)",
-  "Mig.-Quote", "RS (n)", "RS/HS (n)", "Raum", "Schuelerzahl", "Verhaeltnis (J:M)",
-  "dev_de", "dev_dg", "dev_ds", "dev_gender", "dev_mig", "mean_de", "mean_dg", "mean_ds",
-  "mig_room", "prop_m_room", "sd_de", "sd_dg", "sd_ds", "MW de (+/-SD)", "MW dg (+/-SD)", "MW ds (+/-SD)"
+  "Mig.-Quote", "RS (n)", "RS/HS (n)", "Raum", "Schuelerzahl", "Verhaeltnis (J:M)", "UE (Bar)",
+  "dev_de", "dev_dg", "dev_ds", "dev_gender", "dev_mig", "mean_de", "mean_dg", "mean_ds", "mean_ue",
+  "mig_room", "prop_m_room", "sd_de", "sd_dg", "sd_ds", "sd_ue", "MW de (+/-SD)", "MW dg (+/-SD)", "MW ds (+/-SD)"
 ))

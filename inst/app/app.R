@@ -217,12 +217,24 @@ server <- function(input, output, session) {
     females <- sum(rv$final_df$geschlecht == "w", na.rm = TRUE)
     m_prop <- round(males / max(females, 1), 1)
     
+    # Berechne UE Verteilung für die globale Box
+    ue_tab <- table(factor(round(rv$final_df$ue), levels = 1:5))
+    ue_props <- round(prop.table(ue_tab) * 100, 1)
+    ue_html <- HTML(paste0(
+      "<div style='font-size:0.85em; line-height:1.2; margin-top:5px;'>",
+      "Gy: ", ue_props["5"], "% | Gy/RS: ", ue_props["4"], "%<br>",
+      "RS: ", ue_props["3"], "% | RS/HS: ", ue_props["2"], "%<br>",
+      "HS: ", ue_props["1"], "%",
+      "</div>"
+    ))
+    
     layout_column_wrap(
-      width = 1/6,
+      width = 1/7,
       value_box(title = "Schüler Gesamt", value = total_n, showcase = icon("users"), theme = "primary"),
       value_box(title = "Ø de (einfach)", value = round(g$mean_de, 2), p(paste0("± ", round(g$sd_de, 2))), showcase = icon("book"), theme = "info"),
       value_box(title = "Ø dg (gewichtet)", value = round(g$mean_dg, 2), p(paste0("± ", round(g$sd_dg, 2))), showcase = icon("graduation-cap"), theme = "info"),
       value_box(title = "Ø ds (Sprache)", value = round(g$mean_ds, 2), p(paste0("± ", round(g$sd_ds, 2))), showcase = icon("language"), theme = "info"),
+      value_box(title = "Ø ue (Übergang)", value = round(g$mean_ue, 2), p(ue_html), showcase = icon("chart-bar"), theme = "info"),
       value_box(title = "Jungen:Mädchen", value = paste0(m_prop, " : 1"), p(paste0(males, " M, ", females, " W")), showcase = icon("venus-mars"), theme = "secondary"),
       value_box(title = "Migrationsquote", value = paste0(round(g$mig_quote * 100, 1), "%"), showcase = icon("globe"), theme = "secondary")
     )
@@ -245,12 +257,14 @@ server <- function(input, output, session) {
                       dom = 't',
                       scrollX = TRUE,
                       columnDefs = list(
-                        list(visible = FALSE, targets = c("dev_de", "dev_dg", "dev_ds", "dev_mig", "dev_gender", "mean_de", "mean_dg", "mean_ds")),
+                        list(visible = FALSE, targets = c("dev_de", "dev_dg", "dev_ds", "dev_mig", "dev_gender", "mean_de", "mean_dg", "mean_ds", "mean_ue")),
                         list(orderData = which(names(rv$stats) == "mean_de") - 1, targets = which(names(rv$stats) == "MW de (+/-SD)") - 1),
                         list(orderData = which(names(rv$stats) == "mean_dg") - 1, targets = which(names(rv$stats) == "MW dg (+/-SD)") - 1),
-                        list(orderData = which(names(rv$stats) == "mean_ds") - 1, targets = which(names(rv$stats) == "MW ds (+/-SD)") - 1)
+                        list(orderData = which(names(rv$stats) == "mean_ds") - 1, targets = which(names(rv$stats) == "MW ds (+/-SD)") - 1),
+                        list(orderData = which(names(rv$stats) == "mean_ue") - 1, targets = which(names(rv$stats) == "UE (Bar)") - 1)
                       )
                     ),
+                    escape = FALSE,
                     rownames = FALSE) %>%
       formatStyle('MW de (+/-SD)', 'dev_de',
                   background = styleColorBar(c(0, max_dev_de), '#ffc107'),

@@ -11,9 +11,9 @@ test_that("calculate_room_stats returns correct evaluation dataframe structure",
   expect_s3_class(global_df, "data.frame")
   expect_true(nrow(stats_df) == 5)
   expect_true(all(c("Raum", "Schuelerzahl", "MW de (+/-SD)", "MW dg (+/-SD)", "MW ds (+/-SD)", 
-                    "Anzahl Grundschulen", "Groesste Grundschule", "Verhaeltnis (J:M)", 
-                    "Gy (n)", "Gy/RS (n)", "RS (n)", "RS/HS (n)", "HS (n)", "Mig.-Quote",
-                    "dev_de", "dev_dg", "dev_ds", "dev_mig", "dev_gender") %in% names(stats_df)))
+                    "Anzahl Grundschulen", "Groesste Grundschule", "Verhaeltnis (J:M)", "Mig.-Quote",
+                    "UE (Bar)",
+                    "dev_de", "dev_dg", "dev_ds", "dev_mig", "dev_gender", "mean_ue") %in% names(stats_df)))
 })
 
 test_that("create_interactive_plot produces interactive Plotly object", {

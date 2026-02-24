@@ -25,6 +25,36 @@ calculate_room_stats <- function(df) {
     return(paste0(round(m, 2), " +/- ", round(s, 2)))
   }
   
+  # Hilfsfunktion fuer HTML-Balken der Uebergangsempfehlung
+  build_ue_html <- function(m, s) {
+    if (is.na(m)) return("-")
+    
+    m_clip <- min(max(m, 1), 5)
+    s_safe <- ifelse(is.na(s), 0, s)
+    
+    center_pct <- (m_clip - 1) / 4 * 100
+    left_pct <- max(0, (m_clip - s_safe - 1) / 4 * 100)
+    right_pct <- min(100, (m_clip + s_safe - 1) / 4 * 100)
+    width_pct <- right_pct - left_pct
+    
+    html <- paste0(
+      '<div style="display: flex; align-items: center; gap: 8px; justify-content: center;">',
+        '<span style="font-size: 0.75rem; color: #6c757d; width: 15px; text-align: right;">HS</span>',
+        '<div style="flex-grow: 1; max-width: 120px; position: relative; height: 16px; background-color: #e9ecef; border-radius: 3px;">',
+          '<div style="position: absolute; left: ', right_pct, '%; width: 2px; height: 100%; background-color: #adb5bd;"></div>',
+          '<div style="position: absolute; left: ', left_pct, '%; width: ', width_pct, '%; height: 100%; background-color: #adb5bd; border-radius: 2px;"></div>',
+          '<div style="position: absolute; left: ', left_pct, '%; width: 2px; height: 100%; background-color: #adb5bd;"></div>',
+          '<div style="position: absolute; left: ', center_pct, '%; width: 2px; height: 100%; background-color: #212529; transform: translateX(-50%);"></div>',
+        '</div>',
+        '<span style="font-size: 0.75rem; color: #6c757d; width: 15px; text-align: left;">Gy</span>',
+      '</div>',
+      '<div style="text-align: center; font-size: 0.85rem; margin-top: 2px; color: #495057;">', 
+        round(m, 2), if (!is.na(s) && s > 0) paste0(" &plusmn; ", round(s, 2)) else "", 
+      '</div>'
+    )
+    return(html)
+  }
+  
   # Globale Werte (als Basis fuer Visualisierungen und Deviance-Berechnungen)
   df_global <- df %>%
     mutate(mig_numeric = as.numeric(mig == "ja")) %>%
@@ -35,6 +65,8 @@ calculate_room_stats <- function(df) {
       sd_dg = sd(dg, na.rm = TRUE),
       mean_ds = mean(ds, na.rm = TRUE),
       sd_ds = sd(ds, na.rm = TRUE),
+      mean_ue = mean(ue, na.rm = TRUE),
+      sd_ue = sd(ue, na.rm = TRUE),
       mig_quote = mean(mig_numeric, na.rm = TRUE),
       prop_m = mean(geschlecht == "m", na.rm = TRUE)
     )
@@ -50,6 +82,8 @@ calculate_room_stats <- function(df) {
       sd_dg = sd(dg, na.rm = TRUE),
       mean_ds = mean(ds, na.rm = TRUE),
       sd_ds = sd(ds, na.rm = TRUE),
+      mean_ue = mean(ue, na.rm = TRUE),
+      sd_ue = sd(ue, na.rm = TRUE),
       mig_room = mean(mig_numeric, na.rm = TRUE),
       prop_m_room = mean(geschlecht == "m", na.rm = TRUE),
       `Anzahl Grundschulen` = n_distinct(abgebende_schule),
@@ -58,17 +92,13 @@ calculate_room_stats <- function(df) {
         round(sum(geschlecht == "m") / max(sum(geschlecht == "w"), 0.01), 1),
         " (", sum(geschlecht == "m"), "m:", sum(geschlecht == "w"), "w)"
       ),
-      `Gy (n)` = sum(round(ue) == 5, na.rm = TRUE),
-      `Gy/RS (n)` = sum(round(ue) == 4, na.rm = TRUE),
-      `RS (n)` = sum(round(ue) == 3, na.rm = TRUE),
-      `RS/HS (n)` = sum(round(ue) == 2, na.rm = TRUE),
-      `HS (n)` = sum(round(ue) == 1, na.rm = TRUE),
       .groups = "drop"
     ) %>%
     mutate(
       `MW de (+/-SD)` = mapply(fmt_stats, mean_de, sd_de),
       `MW dg (+/-SD)` = mapply(fmt_stats, mean_dg, sd_dg),
       `MW ds (+/-SD)` = mapply(fmt_stats, mean_ds, sd_ds),
+      `UE (Bar)` = mapply(build_ue_html, mean_ue, sd_ue),
       `Mig.-Quote` = paste0(round(mig_room * 100, 0), " %"),
       
       # Versteckte Deviance-Spalten fuer das UI
@@ -83,10 +113,9 @@ calculate_room_stats <- function(df) {
       `Raum`, `Schuelerzahl`, 
       `MW de (+/-SD)`, `MW dg (+/-SD)`, `MW ds (+/-SD)`,
       `Anzahl Grundschulen`, `Groesste Grundschule`,
-      `Verhaeltnis (J:M)`, `Mig.-Quote`,
-      `Gy (n)`, `Gy/RS (n)`, `RS (n)`, `RS/HS (n)`, `HS (n)`,
+      `Verhaeltnis (J:M)`, `Mig.-Quote`, `UE (Bar)`,
       dev_de, dev_dg, dev_ds, dev_mig, dev_gender,
-      mean_de, mean_dg, mean_ds  # Kept for DT ordering
+      mean_de, mean_dg, mean_ds, mean_ue  # Kept for DT ordering
     )
     
   return(list(
