@@ -295,30 +295,39 @@ server <- function(input, output, session) {
   output$stats_table <- renderDT({
     req(rv$stats)
     
-    # Define color mappings for deviations. 
-    # Use max expected deviations to scale the background bars fairly
+    # We want to force TEXT filters instead of sliders to avoid "ghost boxes".
+    # We convert display columns to character, but keep numeric ones for styling.
+    display_df <- rv$stats %>%
+      mutate(
+        `Schuelerzahl ` = as.character(Schuelerzahl),
+        `UE (Bar) ` = as.character(round(mean_ue, 2))
+      )
+    
     max_dev_de <- max(rv$stats$dev_de, 0.5, na.rm = TRUE)
     max_dev_dg <- max(rv$stats$dev_dg, 0.5, na.rm = TRUE)
     max_dev_ds <- max(rv$stats$dev_ds, 0.5, na.rm = TRUE)
     max_dev_mig <- max(rv$stats$dev_mig, 0.1, na.rm = TRUE)
     max_dev_gen <- max(rv$stats$dev_gender, 0.1, na.rm = TRUE)
     
-    dt <- datatable(rv$stats, 
+    # Hide the original numeric columns and show the character versions
+    dt <- datatable(display_df, 
+                    filter = 'top',
                     options = list(
                       pageLength = 20, 
                       dom = 't',
                       scrollX = TRUE,
                       columnDefs = list(
-                        list(visible = FALSE, targets = c("dev_de", "dev_dg", "dev_ds", "dev_mig", "dev_gender", "mean_de", "mean_dg", "mean_ds", "mean_ue", "sd_ue")),
-                        list(orderData = which(names(rv$stats) == "mean_de") - 1, targets = which(names(rv$stats) == "MW de (+/-SD)") - 1),
-                        list(orderData = which(names(rv$stats) == "mean_dg") - 1, targets = which(names(rv$stats) == "MW dg (+/-SD)") - 1),
-                        list(orderData = which(names(rv$stats) == "mean_ds") - 1, targets = which(names(rv$stats) == "MW ds (+/-SD)") - 1)
+                        list(visible = FALSE, targets = c("Schuelerzahl", "UE (Bar)", "dev_de", "dev_dg", "dev_ds", "dev_mig", "dev_gender", "mean_de", "mean_dg", "mean_ds", "mean_ue", "sd_ue")),
+                        list(orderData = which(names(display_df) == "Schuelerzahl") - 1, targets = which(names(display_df) == "Schuelerzahl ") - 1),
+                        list(orderData = which(names(display_df) == "mean_ue") - 1, targets = which(names(display_df) == "UE (Bar) ") - 1),
+                        list(orderData = which(names(display_df) == "mean_de") - 1, targets = which(names(display_df) == "MW de (+/-SD)") - 1),
+                        list(orderData = which(names(display_df) == "mean_dg") - 1, targets = which(names(display_df) == "MW dg (+/-SD)") - 1),
+                        list(orderData = which(names(display_df) == "mean_ds") - 1, targets = which(names(display_df) == "MW ds (+/-SD)") - 1)
                       )
                     ),
                     escape = FALSE,
                     rownames = FALSE) %>%
-      formatRound('UE (Bar)', 2) %>%
-      formatStyle('UE (Bar)',
+      formatStyle('UE (Bar) ', 'mean_ue',
                   background = styleColorBar(c(1, 5), '#ced4da'),
                   backgroundSize = '98% 88%', backgroundRepeat = 'no-repeat', backgroundPosition = 'center') %>%
       formatStyle('MW de (+/-SD)', 'dev_de',
@@ -336,38 +345,48 @@ server <- function(input, output, session) {
       formatStyle('Verhaeltnis (J:M)', 'dev_gender',
                   background = styleColorBar(c(0, max_dev_gen), '#17a2b8'),
                   backgroundSize = '100% 70%', backgroundRepeat = 'no-repeat', backgroundPosition = 'center')
-                  
+    
     return(dt)
   }, server = FALSE)
   
   output$must_links_table <- renderDT({
     req(rv$ml_table)
     
-    # We will use the same kind of deviations logic as the room table.
+    # Nuclear Option: Force all filters to be plain text boxes by making columns characters.
+    display_df <- rv$ml_table %>%
+      mutate(
+        # We add a hidden space to the names of display columns to distinguish them 
+        # from the hidden numeric sorting columns.
+        `Schuelerzahl ` = as.character(Schuelerzahl),
+        `Max Leverage ` = as.character(round(max_leverage, 2)),
+        `UE (Bar) ` = as.character(round(mean_ue, 2))
+      )
+    
     max_dev_de <- max(rv$ml_table$dev_de, 0.5, na.rm = TRUE)
     max_dev_dg <- max(rv$ml_table$dev_dg, 0.5, na.rm = TRUE)
     max_dev_ds <- max(rv$ml_table$dev_ds, 0.5, na.rm = TRUE)
     max_dev_mig <- max(rv$ml_table$dev_mig, 0.1, na.rm = TRUE)
     max_dev_gen <- max(rv$ml_table$dev_gender, 0.1, na.rm = TRUE)
     
-    dt <- datatable(rv$ml_table, 
+    dt <- datatable(display_df, 
                     filter = 'top',
                     options = list(
                       pageLength = 10, 
                       dom = 'ftip',
                       scrollX = TRUE,
                       columnDefs = list(
-                        list(visible = FALSE, targets = c("dev_de", "dev_dg", "dev_ds", "dev_mig", "dev_gender", "max_leverage", "mean_de", "mean_dg", "mean_ds", "mean_ue", "sd_ue")),
-                        list(orderData = which(names(rv$ml_table) == "mean_de") - 1, targets = which(names(rv$ml_table) == "MW de (+/-SD)") - 1),
-                        list(orderData = which(names(rv$ml_table) == "mean_dg") - 1, targets = which(names(rv$ml_table) == "MW dg (+/-SD)") - 1),
-                        list(orderData = which(names(rv$ml_table) == "mean_ds") - 1, targets = which(names(rv$ml_table) == "MW ds (+/-SD)") - 1),
-                        list(orderData = which(names(rv$ml_table) == "max_leverage") - 1, targets = which(names(rv$ml_table) == "Max Leverage") - 1)
+                        list(visible = FALSE, targets = c("Schuelerzahl", "Max Leverage", "UE (Bar)", "dev_de", "dev_dg", "dev_ds", "dev_mig", "dev_gender", "max_leverage", "mean_de", "mean_dg", "mean_ds", "mean_ue", "sd_ue")),
+                        list(orderData = which(names(display_df) == "Schuelerzahl") - 1, targets = which(names(display_df) == "Schuelerzahl ") - 1),
+                        list(orderData = which(names(display_df) == "max_leverage") - 1, targets = which(names(display_df) == "Max Leverage ") - 1),
+                        list(orderData = which(names(display_df) == "mean_ue") - 1, targets = which(names(display_df) == "UE (Bar) ") - 1),
+                        list(orderData = which(names(display_df) == "mean_de") - 1, targets = which(names(display_df) == "MW de (+/-SD)") - 1),
+                        list(orderData = which(names(display_df) == "mean_dg") - 1, targets = which(names(display_df) == "MW dg (+/-SD)") - 1),
+                        list(orderData = which(names(display_df) == "mean_ds") - 1, targets = which(names(display_df) == "MW ds (+/-SD)") - 1)
                       )
                     ),
                     escape = FALSE,
                     rownames = FALSE) %>%
-      formatRound('UE (Bar)', 2) %>%
-      formatStyle('UE (Bar)',
+      formatStyle('UE (Bar) ', 'mean_ue',
                   background = styleColorBar(c(1, 5), '#ced4da'),
                   backgroundSize = '98% 88%', backgroundRepeat = 'no-repeat', backgroundPosition = 'center') %>%
       formatStyle('MW de (+/-SD)', 'dev_de',
@@ -388,7 +407,7 @@ server <- function(input, output, session) {
       formatStyle('Must-Link (*)', 
                   backgroundColor = styleEqual(c("X", ""), c("#28a745", "white")),
                   color = styleEqual(c("X", ""), c("white", "black")))
-                  
+    
     return(dt)
   }, server = FALSE)
   
